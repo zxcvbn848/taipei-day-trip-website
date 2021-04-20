@@ -25,7 +25,6 @@ def selectAttractions(**kwargs):
       sql_cmd = """
                SELECT * 
                FROM attractions 
-               WHERE id BETWEEN 1 AND 24
                LIMIT %s, %s
                """
       value = (pageStart, pageInterval)
