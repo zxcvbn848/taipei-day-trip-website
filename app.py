@@ -31,8 +31,8 @@ def getAttractions():
 		# TBD: keyword 篩選
 		
 		attractionsDataList = selectAttractions(page = page, keyword = keyword)
-		if attractionsDataList == None:
-			return jsonify({ "error": True, "message": "伺服器內部錯誤" })
+		if attractionsDataList == None or len(attractionsDataList) < 12:
+			return jsonify({ "nextPage": None,"data": attractionsDataList })
 		return jsonify({ "nextPage": page + 1,"data": attractionsDataList })
 	except Exception as e:
 		print(e)
