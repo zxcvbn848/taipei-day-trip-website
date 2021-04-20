@@ -47,22 +47,3 @@ with open("taipei-attractions.json", "r", encoding="utf-8") as file:
       websiteDB.commit()
 
 
-# with open("taipei-attractions.json", "r", encoding="utf-8") as file:
-#    data_dict = json.load(file)
-#    results = data_dict["result"]["results"]
-#    for result in results:
-#       id = result["_id"]
-#       imagesUrl = result["file"].split("http://")[1: -1]
-#       for imageUrl in imagesUrl:
-#          if imageUrl.endswith(("jpg", "JPG", "png")):
-#             imageUrl = "http://" + imageUrl
-#             sql_cmd = """
-#                INSERT INTO images (attraction_id, image_url)
-#                VALUES (%s, %s)
-#                """
-#             webCursor.execute(sql_cmd, (id, imageUrl))
-
-#             websiteDB.commit()
-
-
-
