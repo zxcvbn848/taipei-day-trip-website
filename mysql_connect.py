@@ -5,7 +5,7 @@ import json
 
 load_dotenv()
 
-websiteDB = mysql.connector.connect(
+taipeiDB = mysql.connector.connect(
    host = "127.0.0.1",
    port = 3306,
    user = "root",
@@ -14,8 +14,10 @@ websiteDB = mysql.connector.connect(
    charset = "utf8"
 )
 
-webCursor = websiteDB.cursor()
+taipeiCursor = taipeiDB.cursor()
 
+# ====================
+# for /api/attraction
 def selectAttractions(**kwargs):
    attractionsDataList = []
    try:
@@ -38,23 +40,20 @@ def selectAttractions(**kwargs):
                """
          value = (kwargs["keyword"], pageStart, pageInterval)
 
-      webCursor.execute(sql_cmd, value)
+      taipeiCursor.execute(sql_cmd, value)
 
-      webResults = webCursor.fetchall()
-      if webResults:
-         for webResult in webResults:
-            attractionsData = dict(zip(webCursor.column_names, webResult))
+      taipeiResults = taipeiCursor.fetchall()
+      if taipeiResults:
+         for taipeiResult in taipeiResults:
+            attractionsData = dict(zip(taipeiCursor.column_names, taipeiResult))
             attractionsData["images_url"] = json.loads(attractionsData["images_url"])
             attractionsDataList.append(attractionsData)
-         # print(attractionsDataList)
          return attractionsDataList
       else:
          return None
    except Exception as e:
       print(e)
       return None
-
-# selectAttractions()
 
 def selectAttraction(attractionId):
    try:
@@ -64,12 +63,12 @@ def selectAttraction(attractionId):
                WHERE id = { attractionId }
                """
 
-      webCursor.execute(sql_cmd)
+      taipeiCursor.execute(sql_cmd)
 
-      webResult = webCursor.fetchone()
+      taipeiResult = taipeiCursor.fetchone()
 
-      if webResult:
-         attractionData = dict(zip(webCursor.column_names, webResult))
+      if taipeiResult:
+         attractionData = dict(zip(taipeiCursor.column_names, taipeiResult))
          attractionData["images_url"] = json.loads(attractionData["images_url"])
          return attractionData
       else:
@@ -77,3 +76,65 @@ def selectAttraction(attractionId):
    except Exception as e:
       print(e)
       return None
+# ====================
+# for /api/user
+def selectUser(**kwargs):
+   try:
+      sql_cmd = """
+               SELECT *
+               FROM users
+               WHERE
+               """
+
+      for key in kwargs:
+        sql_cmd += f"{ key } = '{ kwargs[key] }' and "
+      
+      sql_cmd = sql_cmd[:-5] # 扣除掉 " and "
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiResult = taipeiCursor.fetchone()
+
+      if taipeiResult:
+         userData = dict(zip(taipeiCursor.column_names, taipeiResult))
+         return userData
+      else:
+         return None
+   except Exception as e:
+      print(e)
+      return None
+
+def insertUser(**kwargs):
+   try:
+      insertColumn = ''
+      insertValue = ''
+
+      for key in kwargs:
+        insertColumn += f"{ key }, "
+        insertValue += f"{ kwargs[key] }, "
+
+      insertColumn = insertColumn[:-2]
+      insertValue = insertValue[:-2]
+      
+      sql_cmd = f"""
+            INSERT INTO users ({ insertColumn })
+            VALUES ({ insertValue })
+            """
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiDB.commit()
+
+   except Exception as e:
+      print(e)
+      return None
+# ====================
+# for /api/booking
+def selectBooking(**kwargs):
+   pass
+
+def insertBooking(**kwargs):
+   pass
+
+def deleteBooking(**kwargs):
+   pass
