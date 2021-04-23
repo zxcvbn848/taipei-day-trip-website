@@ -46,7 +46,7 @@ def selectAttractions(**kwargs):
       if taipeiResults:
          for taipeiResult in taipeiResults:
             attractionsData = dict(zip(taipeiCursor.column_names, taipeiResult))
-            attractionsData["images_url"] = json.loads(attractionsData["images_url"])
+            attractionsData["images"] = json.loads(attractionsData["images"])
             attractionsDataList.append(attractionsData)
          return attractionsDataList
       else:
@@ -69,7 +69,7 @@ def selectAttraction(attractionId):
 
       if taipeiResult:
          attractionData = dict(zip(taipeiCursor.column_names, taipeiResult))
-         attractionData["images_url"] = json.loads(attractionData["images_url"])
+         attractionData["images"] = json.loads(attractionData["images"])
          return attractionData
       else:
          return None

@@ -36,4 +36,13 @@ def booking():
 def thankyou():
 	return render_template("thankyou.html")
 
+# Signin-up
+@app.route("/signin")
+def signin():
+	pass
+
+@app.route("/signup")
+def signup():
+	pass
+
 app.run(host="0.0.0.0", port=3000)

@@ -15,10 +15,10 @@
 <body>
    <div class="nav">
       <nav class="navbar">
-         <div class="title">台北一日遊</div>
+         <div class="title"><a href="/">台北一日遊</a></div>
          <div class="navbar-links">
             <ul>
-               <li><a href="/booking">預定行程</a></li>
+               <li><a href="/booking" target="_blank">預定行程</a></li>
                <li><button data-modal-target="#modalSignin">登入/註冊</button></li>
             </ul>
          </div>
@@ -29,9 +29,9 @@
          <div class="text-area">
             <div class="title">輕鬆享受台北一日悠閒</div>
             <div class="text">探索每個角落，體驗城市的深度旅遊行程</div>
-            <form id="form" class="search">
+            <form id="searchform" class="search">
                <input type="text" name="keyword" id ="searchInput" placeholder="輸入景點名稱查詢" required>
-               <button type="submit" onclick="search();" id="searchButton"><img id="icon" src="../static/image/icon_search.png" alt="圖片失效"></button>
+               <button type="submit" id="searchButton"><img id="icon" src="../static/image/icon_search.png" alt="圖片失效"></button>
             </form>
          </div>
          <div class="image"><img src="../static/image/welcome_1.png" alt=""></div>
@@ -57,10 +57,10 @@
 			<div class="title">註冊會員帳號</div>
 			<button data-close-button class="close-button"></button>
          <form action="#" method="POST">
-            <input type="email" name="email" placeholder="輸入姓名" required>
+            <input type="text" name="name" placeholder="輸入姓名" required>
             <input type="email" name="email" placeholder="輸入電子信箱" required>
             <input type="password" name="password" placeholder="輸入密碼" required>
-            <button type="submit">登入帳戶</button>
+            <button type="submit">註冊新帳戶</button>
          </form>
          <a href="#modalSignin" id="goSignin">已經有帳戶了？點此登入</a>
 		</div>
