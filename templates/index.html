@@ -5,12 +5,12 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Index</title>
-   <link href="../static/css/navbar.css" rel="stylesheet" type="text/css" media="all">
-   <link href="../static/css/header.css" rel="stylesheet" type="text/css" media="all">
-   <link href="../static/css/main.css" rel="stylesheet" type="text/css" media="all">
-   <link href="../static/css/media.css" rel="stylesheet" type="text/css" media="all">
-   <script defer src="../static/js/index.js"></script>
-   <script defer src="../static/js/signin-up.js"></script>
+   <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet" type="text/css" media="all">
+   <link href="{{ url_for('static', filename='css/header.css') }}" rel="stylesheet" type="text/css" media="all">
+   <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" type="text/css" media="all">
+   <link href="{{ url_for('static', filename='css/media.css') }}" rel="stylesheet" type="text/css" media="all">
+   <script defer src="{{ url_for('static', filename='js/index.js') }}"></script>
+   <script defer src="{{ url_for('static', filename='js/signin-up.js') }}"></script>
 </head>
 <body>
    <div class="nav">
@@ -31,10 +31,10 @@
             <div class="text">探索每個角落，體驗城市的深度旅遊行程</div>
             <form id="searchform" class="search">
                <input type="text" name="keyword" id ="searchInput" placeholder="輸入景點名稱查詢" required>
-               <button type="submit" id="searchButton"><img id="icon" src="../static/image/icon_search.png" alt="圖片失效"></button>
+               <button type="submit" id="searchButton"><img id="icon" src="{{ url_for('static', filename='image/icon_search.png') }}" alt="圖片失效"></button>
             </form>
          </div>
-         <div class="image"><img src="../static/image/welcome_1.png" alt=""></div>
+         <div class="image"><img src="{{ url_for('static', filename='image/welcome_1.png') }}" alt=""></div>
       </div>
    </header>
 
@@ -68,103 +68,9 @@
 	<div id="overlay"></div>
 
    <main class="main">
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
-      <div class="attraction">
-         <div class="attraction-image">
-            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000963.jpg" alt="">
-         </div>
-         <div class="title">平安鐘</div>
-         <div class="mrt">忠孝復興</div>
-         <div class="category">公共藝術</div>
-      </div>
    </main>
+   
+   <button id="loadButton" onclick="load();">Next Page</button>
 
    <footer class="footer">
       <div class="text">COPYRIGHT © 2021 台北一日遊</div>

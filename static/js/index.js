@@ -14,68 +14,90 @@ searchInput.addEventListener('keyup', e => {
    }
 })
 
-const imageUrlArray = [];
-const titleArray = [];
-const mrtArray = [];
-const categoryArray = [];
-
 let page = 0;
 const pageInterval = 12;
 
 const elasticIp = '54.204.148.128';
-
-let count = 0;
-
-load();
+const hostIp = '127.0.0.1';
 
 function load() {
-   const src = `http://${elasticIp}:3000/api/attractions?page=${page}`;
-   fetch(src)
-      .then((response) => {
-         return response.json(); 
-      })
+   let src = `http://${hostIp}:3000/api/attractions?page=${page}`;
+   fetch(src, {
+      mode: 'no-cors'
+   })
+      .then(response => response.json())
       .then((result) => {
          let attractionData = result.data;
          let nextPage = result.nextPage;
          
          const mainElement = document.getElementsByClassName('main')[0];
+         console.log(mainElement.firstChild);
 
-         for (let i = count; i < count + pageInterval; i++) {
+         removeAllChildNodes(mainElement);
+
+         for (let i = 0; i < pageInterval; i++) {
             let attractionElement = document.createElement('div');
             attractionElement.classList.add('attraction');
             mainElement.appendChild(attractionElement);
-
+            
+            let image = attractionData[i].images[0];
             let title = attractionData[i].name;
-            titleArray.push(title);
+            let mrt = attractionData[i].mrt;
+            let category = attractionData[i].category;
 
-            let imageUrl = attractionData[i].images_url;
-            imageUrlArray.push(imageUrl);
-
-            let boxImage = document.createElement('div');
-            boxImage.className = 'box-image';
-            let imgTag = document.createElement('img');
-            imgTag.src = imageUrlArray[i];
+            let attractionImage = document.createElement('div');
+            attractionImage.classList.add('attraction-image');
+            let imgElement = document.createElement('img');
+            imgElement.src = image;
             
-            boxImage.appendChild(imgTag);
-            attractionElement.appendChild(boxImage);
+            attractionImage.appendChild(imgElement);
+            attractionElement.appendChild(attractionImage);
    
-            let boxText = document.createElement('div');
-            boxText.className = 'box-text';
-            let textContent = document.createTextNode(titleArray[i]);
+            let titleElement = document.createElement('div');
+            titleElement.classList.add('title');
+            let titleContent = document.createTextNode(title);
             
-            boxText.appendChild(textContent);
-            attractionElement.appendChild(boxText);
+            titleElement.appendChild(titleContent);
+            attractionElement.appendChild(titleElement);            
+
+            let mrtElement = document.createElement('div');
+            mrtElement.classList.add('mrt');
+            let mrtContent = document.createTextNode(mrt);
+            
+            mrtElement.appendChild(mrtContent);
+            attractionElement.appendChild(mrtElement);            
+
+            let categoryElement = document.createElement('div');
+            categoryElement.classList.add('category');
+            let categoryContent = document.createTextNode(category);
+            
+            categoryElement.appendChild(categoryContent);
+            attractionElement.appendChild(categoryElement);            
+
+            mainElement.append(attractionElement);
          }
-         count += pageInterval;
-
          page = nextPage;
-         if (!page) return;
-
-         let boxes = document.getElementsByClassName('box');
-         content.appendChild(boxes);
       });
 }
 
+load();
+
+function removeAllChildNodes(parent) {
+   while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+   }
+}
+
+
+
+// function createTextElement(kwargs) {
+//    let titleElement = document.createElement('div');
+//    titleElement.classList.add(kwargs.className);
+//    let titleContent = document.createTextNode(kwargs.dataArray[i]);
+   
+//    titleElement.appendChild(titleContent);
+//    this.attractionElement.appendChild(titleElement);
+// }
 
    
 // function search() {
