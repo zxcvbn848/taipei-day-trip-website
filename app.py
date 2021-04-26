@@ -48,4 +48,4 @@ def signup():
 if __name__ == "__main__":
 	app.config['TEMPLATES_AUTO_RELOAD'] = True
 	# debug 記得關掉
-	app.run(host="0.0.0.0", port=3000, debug=True)
+	app.run(host="0.0.0.0", port=3000, debug=False)
