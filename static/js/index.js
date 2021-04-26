@@ -32,7 +32,7 @@ searchInput.addEventListener('keyup', e => {
 // Infinite Scroll
 window.addEventListener('scroll', debounce(infiniteScroll));
 
-function debounce(func, wait = 50, immediate = true) {
+function debounce(func, wait = 100, immediate = true) {
    let timeout;
    return function() {
       let context = this, args = arguments;
@@ -50,7 +50,9 @@ function debounce(func, wait = 50, immediate = true) {
 function infiniteScroll() {
    const attractionElement = document.getElementsByClassName('attraction')[document.getElementsByClassName('attraction').length - 1];
    const footerElement = document.getElementsByClassName('footer')[0];
-   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - attractionElement.scrollHeight * 2 - footerElement.scrollHeight * 2 - 54)) {
+
+   if (page == null) return;
+   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 400)) {
       search();
    }
 }
@@ -75,52 +77,7 @@ function search() {
          
          const mainElement = document.getElementsByClassName('main')[0];
 
-         if (attractionDataArray) {
-            for (let attractionData of attractionDataArray) {
-               let attractionElement = document.createElement('div');
-               attractionElement.classList.add('attraction');
-               mainElement.appendChild(attractionElement);
-               
-               let image = attractionData.images[0];
-               let title = attractionData.name;
-               let mrt = attractionData.mrt;
-               if (mrt == null) {
-                  mrt = '無';
-               }
-               let category = attractionData.category;
-   
-               let attractionImage = document.createElement('div');
-               attractionImage.classList.add('attraction-image');
-               let imgElement = document.createElement('img');
-               imgElement.src = image;
-               
-               attractionImage.appendChild(imgElement);
-               attractionElement.appendChild(attractionImage);
-      
-               let titleElement = document.createElement('div');
-               titleElement.classList.add('title');
-               let titleContent = document.createTextNode(title);
-               
-               titleElement.appendChild(titleContent);
-               attractionElement.appendChild(titleElement);            
-   
-               let mrtElement = document.createElement('div');
-               mrtElement.classList.add('mrt');
-               let mrtContent = document.createTextNode(mrt);
-               
-               mrtElement.appendChild(mrtContent);
-               attractionElement.appendChild(mrtElement);            
-   
-               let categoryElement = document.createElement('div');
-               categoryElement.classList.add('category');
-               let categoryContent = document.createTextNode(category);
-               
-               categoryElement.appendChild(categoryContent);
-               attractionElement.appendChild(categoryElement);            
-   
-               mainElement.append(attractionElement);
-            }
-         } else {
+	 if (attractionDataArray == null) {
             let titleElement = document.createElement('div');
             titleElement.classList.add('no-result');
             const noResultConetent = document.createTextNode('沒有結果');
@@ -128,7 +85,52 @@ function search() {
             titleElement.appendChild(noResultConetent);
 
             mainElement.appendChild(titleElement);
-         }
+         } else {
+      	       for (let attractionData of attractionDataArray) {
+ 	          let attractionElement = document.createElement('div');
+	          attractionElement.classList.add('attraction');
+	          mainElement.appendChild(attractionElement);
+	       
+	          let image = attractionData.images[0];
+	          let title = attractionData.name;
+	          let mrt = attractionData.mrt;
+	          if (mrt == null) {
+	             mrt = '無';
+	          }
+	       	  let category = attractionData.category;
+
+	          let attractionImage = document.createElement('div');
+	          attractionImage.classList.add('attraction-image');
+	          let imgElement = document.createElement('img');
+	          imgElement.src = image;
+	    
+	          attractionImage.appendChild(imgElement);
+	          attractionElement.appendChild(attractionImage);
+
+	          let titleElement = document.createElement('div');
+	          titleElement.classList.add('title');
+	          let titleContent = document.createTextNode(title);
+	       
+	          titleElement.appendChild(titleContent);
+	          attractionElement.appendChild(titleElement);            
+
+	          let mrtElement = document.createElement('div');
+	          mrtElement.classList.add('mrt');
+	          let mrtContent = document.createTextNode(mrt);
+	       
+	          mrtElement.appendChild(mrtContent);
+	          attractionElement.appendChild(mrtElement);            
+
+	          let categoryElement = document.createElement('div');
+	          categoryElement.classList.add('category');
+	          let categoryContent = document.createTextNode(category);
+	      
+	          categoryElement.appendChild(categoryContent);
+	          attractionElement.appendChild(categoryElement);            
+
+	          mainElement.append(attractionElement);            
+	    }
+         } 
          page = nextPage;
       })
       .catch(error => console.log(error));
