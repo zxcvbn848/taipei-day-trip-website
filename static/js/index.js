@@ -32,7 +32,7 @@ searchInput.addEventListener('keyup', e => {
 // Infinite Scroll
 window.addEventListener('scroll', debounce(infiniteScroll));
 
-function debounce(func, wait = 100, immediate = true) {
+function debounce(func, wait = 50, immediate = true) {
    let timeout;
    return function() {
       let context = this, args = arguments;
@@ -50,12 +50,10 @@ function debounce(func, wait = 100, immediate = true) {
 function infiniteScroll() {
    const attractionElement = document.getElementsByClassName('attraction')[document.getElementsByClassName('attraction').length - 1];
    const footerElement = document.getElementsByClassName('footer')[0];
-   console.log(window.scrollY + window.innerHeight, document.body.scrollHeight, attractionElement.scrollHeight, document.body.scrollHeight - attractionElement.scrollHeight);
-   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - attractionElement.scrollHeight - footerElement.scrollHeight * 2)) {
+   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - attractionElement.scrollHeight * 2 - footerElement.scrollHeight * 2 - 54)) {
       search();
    }
 }
-
 
 search();
 
