@@ -25,7 +25,6 @@ searchInput.addEventListener('keyup', e => {
       e.preventDefault();
 
       document.getElementById('searchButton').click();
-      document.getElementById('searchButton').focus();
       document.getElementById('searchInput').blur();
    }
 })
@@ -33,7 +32,7 @@ searchInput.addEventListener('keyup', e => {
 // Infinite Scroll
 window.addEventListener('scroll', debounce(infiniteScroll));
 
-function debounce(func, wait = 500, immediate = true) {
+function debounce(func, wait = 100, immediate = true) {
    let timeout;
    return function() {
       let context = this, args = arguments;
@@ -49,7 +48,10 @@ function debounce(func, wait = 500, immediate = true) {
 }
 
 function infiniteScroll() {
-   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 54)) {
+   const attractionElement = document.getElementsByClassName('attraction')[document.getElementsByClassName('attraction').length - 1];
+   const footerElement = document.getElementsByClassName('footer')[0];
+   console.log(window.scrollY + window.innerHeight, document.body.scrollHeight, attractionElement.scrollHeight, document.body.scrollHeight - attractionElement.scrollHeight);
+   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - attractionElement.scrollHeight - footerElement.scrollHeight * 2)) {
       search();
    }
 }
