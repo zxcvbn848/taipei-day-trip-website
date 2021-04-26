@@ -4,8 +4,8 @@ let page = 0;
 
 let keyword = '';
 
-const elasticIp = '54.204.148.128';
-const hostIp = '127.0.0.1';
+// const elasticIp = '54.204.148.128';
+// const hostIp = '127.0.0.1';
 
 // search form
 const searchform = document.getElementById('searchform');
@@ -64,9 +64,9 @@ function search() {
    let keyword = document.getElementsByName('keyword')[0].value;
    let src = '';
    if (page != null && keyword) {
-      src = `http://${hostIp}:3000/api/attractions?page=${page}&keyword=${keyword}`;
+      src = `api/attractions?page=${page}&keyword=${keyword}`;
    } else if (page != null) {
-      src = `http://${hostIp}:3000/api/attractions?page=${page}`;
+      src = `api/attractions?page=${page}`;
    } else {
          return;
    }

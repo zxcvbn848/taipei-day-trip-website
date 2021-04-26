@@ -1,5 +1,4 @@
 from flask import Flask, Blueprint, render_template, session
-from flask_cors import CORS
 from datetime import timedelta
 import os
 
