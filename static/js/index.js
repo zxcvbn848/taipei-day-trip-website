@@ -4,9 +4,6 @@ let page = 0;
 
 let keyword = '';
 
-// const elasticIp = '54.204.148.128';
-// const hostIp = '127.0.0.1';
-
 // search form
 const searchform = document.getElementById('searchform');
 
@@ -36,7 +33,7 @@ searchInput.addEventListener('keyup', e => {
 // Infinite Scroll
 window.addEventListener('scroll', debounce(infiniteScroll));
 
-function debounce(func, wait = 20, immediate = true) {
+function debounce(func, wait = 500, immediate = true) {
    let timeout;
    return function() {
       let context = this, args = arguments;
@@ -47,7 +44,7 @@ function debounce(func, wait = 20, immediate = true) {
       let callNow = immediate && !timeout;
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args); //立即執行後再隔20ms
+      if (callNow) func.apply(context, args); //立即執行後再隔數ms
    };
 }
 
