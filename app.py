@@ -1,19 +1,20 @@
 from flask import Flask, Blueprint, render_template, session
+from flask_cors import CORS
 from datetime import timedelta
 import os
 
 from mysql_connect import selectAttractions, selectAttraction
 
-from api.attraction import appAttraction
-from api.user import appUser
-from api.booking import appBooking
-from api.order import appOrder
+from api.attraction import api_attraction
+from api.user import api_user
+from api.booking import api_booking
+from api.order import api_order
 
 app=Flask(__name__)
-app.register_blueprint(appAttraction, url_prefix="/api")
-app.register_blueprint(appUser, url_prefix="/api")
-app.register_blueprint(appBooking, url_prefix="/api")
-app.register_blueprint(appOrder, url_prefix="/api")
+app.register_blueprint(api_attraction, url_prefix="/api")
+app.register_blueprint(api_user, url_prefix="/api")
+app.register_blueprint(api_booking, url_prefix="/api")
+app.register_blueprint(api_order, url_prefix="/api")
 
 app.config["JSON_SORT_KEYS"] = False
 app.config["JSON_AS_ASCII"] = False
@@ -39,12 +40,13 @@ def thankyou():
 # Signin-up
 @app.route("/signin")
 def signin():
-	pass
+	return "signin"
 
 @app.route("/signup")
 def signup():
-	pass
+	return "signup"
 
 if __name__ == "__main__":
 	app.config['TEMPLATES_AUTO_RELOAD'] = True
-	app.run(host="0.0.0.0", port=3000)
+	# debug 記得關掉
+	app.run(host="0.0.0.0", port=3000, debug=False)

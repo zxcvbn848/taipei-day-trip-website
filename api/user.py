@@ -5,9 +5,9 @@ from flask import request, Blueprint, jsonify, session
 
 from mysql_connect import selectUser, insertUser
  
-appUser = Blueprint("appUser", __name__)
+api_user = Blueprint("api_user", __name__)
 
-@appUser.route("/user", methods=["GET"])
+@api_user.route("/user", methods=["GET"])
 def getUser():
    try:
       if "email" in session:
@@ -29,7 +29,7 @@ def getUser():
       return jsonify({ "error": True, "message": e })
 
       
-@appUser.route("/user", methods=["POST"])
+@api_user.route("/user", methods=["POST"])
 def postUser():
    try:
       name = request.form["name"]
@@ -53,7 +53,7 @@ def postUser():
       print(e)
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })
 
-@appUser.route("/user", methods=["PATCH"])
+@api_user.route("/user", methods=["PATCH"])
 def patchUser():
    try:
       email = request.form["email"]
@@ -73,7 +73,7 @@ def patchUser():
       print(e)
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })
 
-@appUser.route("/user", methods=["DELETE"])
+@api_user.route("/user", methods=["DELETE"])
 def deleteUser():
    try:
       session.clear()

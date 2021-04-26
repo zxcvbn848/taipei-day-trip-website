@@ -6,9 +6,9 @@ from flask import request, Blueprint, jsonify, session
 # TBD
 from mysql_connect import selectBooking, insertBooking, deleteBooking
  
-appBooking = Blueprint("appBooking", __name__)
+api_booking = Blueprint("api_booking", __name__)
 
-@appBooking.route("/booking", methods=["GET"])
+@api_booking.route("/booking", methods=["GET"])
 def getBooking():
    try:
    # if "email" in session:
@@ -17,7 +17,7 @@ def getBooking():
       print(e)
       return jsonify({ "error": True, "message": "自訂的錯誤訊息" })
       
-@appBooking.route("/booking", methods=["POST"])
+@api_booking.route("/booking", methods=["POST"])
 def postBooking():
    try:
       # if "email" in session:
@@ -36,7 +36,7 @@ def postBooking():
       print(e)
       return jsonify({ "error": True, "message": "自訂的錯誤訊息" })
 
-@appBooking.route("/booking", methods=["DELETE"])
+@api_booking.route("/booking", methods=["DELETE"])
 def deleteBooking():
    try:
    # if "email" in session:

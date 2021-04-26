@@ -1,8 +1,24 @@
 
-const form = document.getElementById('searchform');
+// display attractions
+let page = 0;
 
-form.addEventListener('submit', (e) => {
+let keyword = '';
+
+const elasticIp = '54.204.148.128';
+const hostIp = '127.0.0.1';
+
+// search form
+const searchform = document.getElementById('searchform');
+
+searchform.addEventListener('submit', (e) => {
    e.preventDefault();
+
+   const mainElement = document.getElementsByClassName('main')[0];
+
+   removeAllChildNodes(mainElement);
+
+   page = 0;
+
    search();
 });
 
@@ -10,85 +26,128 @@ const searchInput = document.getElementById('searchInput');
 searchInput.addEventListener('keyup', e => {
    if (e.code == 'Enter') {
       e.preventDefault();
+
       document.getElementById('searchButton').click();
+      document.getElementById('searchButton').focus();
+      document.getElementById('searchInput').blur();
    }
 })
 
-let page = 0;
-const pageInterval = 12;
+// Infinite Scroll
+window.addEventListener('scroll', debounce(infiniteScroll));
 
-const elasticIp = '54.204.148.128';
-const hostIp = '127.0.0.1';
+function debounce(func, wait = 20, immediate = true) {
+   let timeout;
+   return function() {
+      let context = this, args = arguments;
+      let later = function() {
+         timeout = null;
+         if (!immediate) func.apply(context, args); // 不立即執行則是隔waitms後執行
+      };
+      let callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args); //立即執行後再隔20ms
+   };
+}
 
-function load() {
-   let src = `http://${hostIp}:3000/api/attractions?page=${page}`;
-   fetch(src, {
-      mode: 'no-cors'
-   })
+function infiniteScroll() {
+   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 54)) {
+      search();
+   }
+}
+
+
+search();
+
+function search() {
+   let keyword = document.getElementsByName('keyword')[0].value;
+   let src = '';
+   if (page != null && keyword) {
+      src = `http://${hostIp}:3000/api/attractions?page=${page}&keyword=${keyword}`;
+   } else if (page != null) {
+      src = `http://${hostIp}:3000/api/attractions?page=${page}`;
+   } else {
+         return;
+   }
+   fetch(src)
       .then(response => response.json())
       .then((result) => {
-         let attractionData = result.data;
+         let attractionDataArray = result.data;
          let nextPage = result.nextPage;
          
          const mainElement = document.getElementsByClassName('main')[0];
-         console.log(mainElement.firstChild);
 
-         removeAllChildNodes(mainElement);
-
-         for (let i = 0; i < pageInterval; i++) {
-            let attractionElement = document.createElement('div');
-            attractionElement.classList.add('attraction');
-            mainElement.appendChild(attractionElement);
-            
-            let image = attractionData[i].images[0];
-            let title = attractionData[i].name;
-            let mrt = attractionData[i].mrt;
-            let category = attractionData[i].category;
-
-            let attractionImage = document.createElement('div');
-            attractionImage.classList.add('attraction-image');
-            let imgElement = document.createElement('img');
-            imgElement.src = image;
-            
-            attractionImage.appendChild(imgElement);
-            attractionElement.appendChild(attractionImage);
+         if (attractionDataArray) {
+            for (let attractionData of attractionDataArray) {
+               let attractionElement = document.createElement('div');
+               attractionElement.classList.add('attraction');
+               mainElement.appendChild(attractionElement);
+               
+               let image = attractionData.images[0];
+               let title = attractionData.name;
+               let mrt = attractionData.mrt;
+               if (mrt == null) {
+                  mrt = '無';
+               }
+               let category = attractionData.category;
    
+               let attractionImage = document.createElement('div');
+               attractionImage.classList.add('attraction-image');
+               let imgElement = document.createElement('img');
+               imgElement.src = image;
+               
+               attractionImage.appendChild(imgElement);
+               attractionElement.appendChild(attractionImage);
+      
+               let titleElement = document.createElement('div');
+               titleElement.classList.add('title');
+               let titleContent = document.createTextNode(title);
+               
+               titleElement.appendChild(titleContent);
+               attractionElement.appendChild(titleElement);            
+   
+               let mrtElement = document.createElement('div');
+               mrtElement.classList.add('mrt');
+               let mrtContent = document.createTextNode(mrt);
+               
+               mrtElement.appendChild(mrtContent);
+               attractionElement.appendChild(mrtElement);            
+   
+               let categoryElement = document.createElement('div');
+               categoryElement.classList.add('category');
+               let categoryContent = document.createTextNode(category);
+               
+               categoryElement.appendChild(categoryContent);
+               attractionElement.appendChild(categoryElement);            
+   
+               mainElement.append(attractionElement);
+            }
+         } else {
             let titleElement = document.createElement('div');
-            titleElement.classList.add('title');
-            let titleContent = document.createTextNode(title);
+            titleElement.classList.add('no-result');
+            const noResultConetent = document.createTextNode('沒有結果');
             
-            titleElement.appendChild(titleContent);
-            attractionElement.appendChild(titleElement);            
+            titleElement.appendChild(noResultConetent);
 
-            let mrtElement = document.createElement('div');
-            mrtElement.classList.add('mrt');
-            let mrtContent = document.createTextNode(mrt);
-            
-            mrtElement.appendChild(mrtContent);
-            attractionElement.appendChild(mrtElement);            
-
-            let categoryElement = document.createElement('div');
-            categoryElement.classList.add('category');
-            let categoryContent = document.createTextNode(category);
-            
-            categoryElement.appendChild(categoryContent);
-            attractionElement.appendChild(categoryElement);            
-
-            mainElement.append(attractionElement);
+            mainElement.appendChild(titleElement);
          }
          page = nextPage;
-      });
+      })
+      .catch(error => console.log(error));
 }
-
-load();
 
 function removeAllChildNodes(parent) {
    while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
    }
-}
+}   
 
-
+// const titleKwargs = {
+//    className: 'title',
+//    name: title,
+//    parentElement: attractionElement
+// };
 
 // function createTextElement(kwargs) {
 //    let titleElement = document.createElement('div');
@@ -96,50 +155,5 @@ function removeAllChildNodes(parent) {
 //    let titleContent = document.createTextNode(kwargs.dataArray[i]);
    
 //    titleElement.appendChild(titleContent);
-//    this.attractionElement.appendChild(titleElement);
+//    kwargs.parentElement.appendChild(titleElement);
 // }
-
-   
-// function search() {
-//    let keyword = document.getElementsByName('keyword')[0].value;
-//    const src = `http://127.0.0.1:3000/api/attractions?page=${page}&keyword=${keyword}`;
-//    fetch(src)
-//       .then((response) => {
-//          return response.json(); 
-//       })
-//       .then((result) => {
-//          let attracionElement = document.getElementsByClassName('attraction')[0];
-//          let attractionData = result.data;            
-         
-//          for (let i = count; i < count + countInterval; i++) {
-//                let box = document.createElement('div');
-//                box.className = 'box';
-//                content.appendChild(box);
-
-//                let title = scenicArea[i].stitle;
-//                titleArray.push(title);
-
-//                let imageUrl = 'http://' + scenicArea[i].file.split('http://')[1];
-//                imageUrlArray.push(imageUrl);
-   
-//                let boxImage = document.createElement('div');
-//                boxImage.className = 'box-image';
-//                let imgTag = document.createElement('img');
-//                imgTag.src = imageUrlArray[i];
-               
-//                boxImage.appendChild(imgTag);
-//                box.appendChild(boxImage);
-      
-//                let boxText = document.createElement('div');
-//                boxText.className = 'box-text';
-//                let textContent = document.createTextNode(titleArray[i]);
-               
-//                boxText.appendChild(textContent);
-//                box.appendChild(boxText);
-//          }
-//          count += 8;
-
-//          let boxes = document.getElementsByClassName('box');
-//          content.appendChild(boxes);
-//       });
-//    }

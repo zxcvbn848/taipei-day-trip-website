@@ -18,7 +18,7 @@
          <div class="title"><a href="/">台北一日遊</a></div>
          <div class="navbar-links">
             <ul>
-               <li><a href="/booking" target="_blank">預定行程</a></li>
+               <li><a href="/booking" target="_self">預定行程</a></li>
                <li><button data-modal-target="#modalSignin">登入/註冊</button></li>
             </ul>
          </div>
@@ -30,7 +30,7 @@
             <div class="title">輕鬆享受台北一日悠閒</div>
             <div class="text">探索每個角落，體驗城市的深度旅遊行程</div>
             <form id="searchform" class="search">
-               <input type="text" name="keyword" id ="searchInput" placeholder="輸入景點名稱查詢" required>
+               <input type="text" name="keyword" id ="searchInput" placeholder="輸入景點名稱查詢" onfocus="this.select();">
                <button type="submit" id="searchButton"><img id="icon" src="{{ url_for('static', filename='image/icon_search.png') }}" alt="圖片失效"></button>
             </form>
          </div>
@@ -43,7 +43,7 @@
 		<div class="modal-body">
 			<div class="title">登入會員帳號</div>
 			<button data-close-button class="close-button"></button>
-         <form action="#" method="POST">
+         <form method="POST">
             <input type="email" name="email" placeholder="輸入電子信箱" required>
             <input type="password" name="password" placeholder="輸入密碼" required>
             <button type="submit">登入帳戶</button>
@@ -69,8 +69,8 @@
 
    <main class="main">
    </main>
-   
-   <button id="loadButton" onclick="load();">Next Page</button>
+
+   <!-- <button class="loadButton" onclick="loadMore();">Load More</button> -->
 
    <footer class="footer">
       <div class="text">COPYRIGHT © 2021 台北一日遊</div>

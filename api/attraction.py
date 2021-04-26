@@ -4,9 +4,9 @@ sys.path.append("..")
 from flask import request, Blueprint, jsonify
 from mysql_connect import selectAttractions, selectAttraction
  
-appAttraction = Blueprint('appAttraction', __name__)
+api_attraction = Blueprint('api_attraction', __name__)
 
-@appAttraction.route("/attractions", methods=["GET"])
+@api_attraction.route("/attractions", methods=["GET"])
 def getAttractions():
 	try:
 		page = int(request.args.get("page"))
@@ -17,18 +17,18 @@ def getAttractions():
 		attractionsDataList = selectAttractions(page = page, keyword = keyword)
 
 		if attractionsDataList == None or len(attractionsDataList) < 12:
-			return jsonify({ "nextPage": None,"data": attractionsDataList })
+			return jsonify({ "nextPage": None, "data": attractionsDataList })
 		if len(attractionsDataList) == 12:
 			attractionsDataListNextPage = selectAttractions(page = (page + 1), keyword = keyword)
 			if attractionsDataListNextPage == None:
-				return jsonify({ "nextPage": None,"data": attractionsDataList })
+				return jsonify({ "nextPage": None, "data": attractionsDataList })
 				
-		return jsonify({ "nextPage": page + 1,"data": attractionsDataList })
+		return jsonify({ "nextPage": page + 1, "data": attractionsDataList })
 	except Exception as e:
 		print(e)
-		return jsonify({ "error": True, "message": e })
+		return jsonify({ "error": True, "message": "伺服器內部錯誤" })
 
-@appAttraction.route("/attraction/<int:id>", methods=["GET"])
+@api_attraction.route("/attraction/<int:id>", methods=["GET"])
 def getAttraction(id):
 	try:
 		attractionData = selectAttraction(id)
