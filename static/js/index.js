@@ -19,16 +19,6 @@ searchform.addEventListener('submit', (e) => {
    search();
 });
 
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('keyup', e => {
-   if (e.code == 'Enter') {
-      e.preventDefault();
-
-      document.getElementById('searchButton').click();
-      document.getElementById('searchInput').blur();
-   }
-})
-
 let isFetching = false;
 
 search();
