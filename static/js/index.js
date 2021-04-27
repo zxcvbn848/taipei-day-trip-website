@@ -125,24 +125,21 @@ function removeAllChildNodes(parent) {
 // Infinite Scroll
 window.addEventListener('scroll', debounce(infiniteScroll));
 
-function debounce(func, wait = 100, immediate = true) {
+function debounce(func, wait = 100) {
    let timeout;
    return function() {
-      let context = this, args = arguments;
-      let later = function() {
-         timeout = null;
-         if (!immediate) func.apply(context, args); // 不立即執行則是隔waitms後執行
+      const later = function() {
+         clearTimeout(timeout);
+         func();
       };
-      let callNow = immediate && !timeout;
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args); //立即執行後再隔數ms
    };
 }
 
 function infiniteScroll() {
    if (page == null) return;
-   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 400)) {
+   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 200)) {
       if (!isFetching) {
          search();
       }
