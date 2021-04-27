@@ -1,10 +1,26 @@
-from flask import *
+from flask import Flask, Blueprint, render_template, session
+from datetime import timedelta
+import os
+
 from mysql_connect import selectAttractions, selectAttraction
 
+from api.attraction import api_attraction
+from api.user import api_user
+from api.booking import api_booking
+from api.order import api_order
+
 app=Flask(__name__)
+app.register_blueprint(api_attraction, url_prefix="/api")
+app.register_blueprint(api_user, url_prefix="/api")
+app.register_blueprint(api_booking, url_prefix="/api")
+app.register_blueprint(api_order, url_prefix="/api")
+
 app.config["JSON_SORT_KEYS"] = False
 app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+app.config["SECRET_KEY"] = os.urandom(24)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days = 1)
 
 # Pages
 @app.route("/")
@@ -19,43 +35,17 @@ def booking():
 @app.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
-# ==============
-# API
-@app.route("/api/attractions", methods=["GET"])
-def getAttractions():
-	try:
-		page = int(request.args.get("page"))
-		keyword = request.args.get("keyword")
-		if page == None or page < 0:
-			return jsonify({ "error": True, "message": "伺服器內部錯誤" })
-		# TBD: keyword 篩選
-		
-		attractionsDataList = selectAttractions(page = page, keyword = keyword)
 
-		if attractionsDataList == None or len(attractionsDataList) < 12:
-			return jsonify({ "nextPage": None,"data": attractionsDataList })
-		if len(attractionsDataList) == 12:
-			attractionsDataListNextPage = selectAttractions(page = (page + 1), keyword = keyword)
-			if attractionsDataListNextPage == None:
-				return jsonify({ "nextPage": None,"data": attractionsDataList })
-				
-		return jsonify({ "nextPage": page + 1,"data": attractionsDataList })
-	except Exception as e:
-		print(e)
-		return jsonify({ "error": True, "message": e })
+# Signin-up
+@app.route("/signin")
+def signin():
+	return "signin"
 
-@app.route("/api/attraction/<int:id>", methods=["GET"])
-def getAttraction(id):
-	try:
-		attractionData = selectAttraction(id)
+@app.route("/signup")
+def signup():
+	return "signup"
 
-		if attractionData == None:
-			return jsonify({ "error": True, "message": "景點編號不正確" })	
-		else:
-			return jsonify({ "data": attractionData })
-	except Exception as e:
-		print(e)
-		return jsonify({ "error": True, "message": "伺服器內部錯誤" })
-
-
-app.run(host="0.0.0.0", port=3000)
+if __name__ == "__main__":
+	app.config['TEMPLATES_AUTO_RELOAD'] = True
+	# debug 記得關掉
+	app.run(host="0.0.0.0", port=3000, debug=False)

@@ -39,7 +39,7 @@ with open("taipei-attractions.json", "r", encoding="utf-8") as file:
       imagesUrlListJson = json.dumps(imagesUrlList)
 
       sql_cmd = """
-         INSERT INTO attractions (id, name, category, description, address, transport, mrt, latitude, longitude, images_url)
+         INSERT INTO attractions (id, name, category, description, address, transport, mrt, latitude, longitude, images)
          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
          """
       webCursor.execute(sql_cmd, (id, name, category, description, address, transport, mrt, latitude, longitude, imagesUrlListJson))
