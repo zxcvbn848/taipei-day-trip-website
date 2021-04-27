@@ -1,0 +1,124 @@
+/* attraction-introduction */
+.attraction-introduction {
+   display: flex; justify-content: center; align-items: center;
+
+   position: relative;
+   top: 54px;
+
+   width: 1200px;
+   max-width: 90%;
+   height: 410px;
+
+   margin: 37px auto 0px;
+   padding: 0px 10px;
+}
+
+.attraction-introduction .carousel {
+   width: 50%;
+   height: 100%;
+}
+
+.attraction-introduction .carousel img {
+   width: 100%;
+   height: 100%;
+}
+
+.attraction-introduction .information {
+   display: flex; flex-direction: column; justify-content: space-between;
+   width: 50%;
+   height: 100%;
+}
+
+.attraction-introduction .information .name {
+   width: 100%;
+   height: 33px;
+}
+
+.attraction-introduction .information .category-mrt {
+   width: 100%;
+   height: 22px;
+}
+
+.attraction-introduction .information .schedule-order {
+   width: 600px;
+   height: 302px;
+
+   background: #E8E8E8;
+   border-radius: 5px;
+}
+
+
+/* hr */
+hr {
+   position: relative;
+   top: 54px;
+   border: 1px solid #E8E8E8;
+   margin: 37px auto 50px;
+
+   width: 1200px;
+}
+
+/* section */
+section {
+   position: relative;
+   top: 54px;
+   
+   width: var(--content-width);
+
+   margin: 0px auto 55px;
+
+   padding: 0px 10px;
+
+   font-family: Noto Sans TC;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 16px;
+
+   color: #666666;
+}
+
+section .descrption,
+section .addressArea,
+section .transportArea {
+   width: 100%;
+   margin: 10px auto;
+}
+
+section .addressArea .title,
+section .transportArea .title {
+   font-weight: bold;
+}
+
+/* Footer */
+.footer {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   
+   position: relative;
+   top: 54px;
+   width: var(--window-width);
+   max-width: 100%;
+   height: var(--footer-height);
+   bottom: 0px;
+      
+   background: #757575;   
+}
+
+.footer .text{
+   width: 234px;
+   height: 24px;
+
+   font-family: Noto Sans TC;
+   font-style: normal;
+   font-weight: bold;
+   font-size: 16px;
+   line-height: 13px;
+   
+   display: flex;
+   align-items: center;
+
+   padding: 5px 0px;
+      
+   color: #FFFFFF;
+}

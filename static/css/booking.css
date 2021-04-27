@@ -77,36 +77,6 @@
    justify-content: flex-end;
 }
 
-/* section */
-section {
-   position: relative;
-   top: 54px;
-   
-   width: var(--content-width);
-
-   margin: 55px auto;
-   padding: 0px 10px;
-
-   font-family: Noto Sans TC;
-   font-style: normal;
-   font-weight: normal;
-   font-size: 16px;
-
-   color: #666666;
-}
-
-section .descrption,
-section .addressArea,
-section .transportArea {
-   width: 100%;
-   margin: 10px auto;
-}
-
-section .addressArea .title,
-section .transportArea .title {
-   font-weight: bold;
-}
-
 /* Footer */
 .footer {
    display: flex;
