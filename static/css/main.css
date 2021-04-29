@@ -21,10 +21,7 @@
    grid-template-columns: 130px;
    grid-template-rows: 170px 20px;
    grid-gap: 7px;
-
-   /* justify-items: stretch;
-   align-items: stretch; */
-   
+  
    position: relative;
    width: 270px;
    height: auto;
@@ -34,6 +31,12 @@
    background: #FFFFFF;
    border: 1px solid rgb(206, 206, 206);
    border-radius: 5px;
+
+   text-decoration: none;
+}
+
+.main .attraction:hover {
+   border: 2px ridge blue;
 }
 
 .main .attraction .attraction-image {

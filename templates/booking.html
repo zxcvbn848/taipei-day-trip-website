@@ -6,9 +6,11 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Booking</title>
    <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet" type="text/css" media="all">
+   <link href="{{ url_for('static', filename='css/header.css') }}" rel="stylesheet" type="text/css" media="all">
    <link href="{{ url_for('static', filename='css/booking.css') }}" rel="stylesheet" type="text/css" media="all">
    <link href="{{ url_for('static', filename='css/media.css') }}" rel="stylesheet" type="text/css" media="all">
    <script defer src="{{ url_for('static', filename='js/booking.js') }}"></script>
+   <script defer src="{{ url_for('static', filename='js/signin-up.js') }}"></script>
 </head>
 <body>
    <div class="nav">
@@ -22,6 +24,35 @@
          </div>
       </nav>
    </div>
+
+   <div class="modal" id="modalSignin">
+		<div class="modal-header"></div>
+		<div class="modal-body">
+			<div class="title">登入會員帳號</div>
+			<button data-close-button class="close-button"></button>
+         <form method="POST">
+            <input type="email" name="email" placeholder="輸入電子信箱" required>
+            <input type="password" name="password" placeholder="輸入密碼" required>
+            <button type="submit">登入帳戶</button>
+         </form>
+         <a href="#modalSignup" id="goSignup">還沒有帳戶？點此註冊</a>
+		</div>
+	</div>
+	<div class="modal signup" id="modalSignup">
+		<div class="modal-header"></div>
+		<div class="modal-body">
+			<div class="title">註冊會員帳號</div>
+			<button data-close-button class="close-button"></button>
+         <form action="#" method="POST">
+            <input type="text" name="name" placeholder="輸入姓名" required>
+            <input type="email" name="email" placeholder="輸入電子信箱" required>
+            <input type="password" name="password" placeholder="輸入密碼" required>
+            <button type="submit">註冊新帳戶</button>
+         </form>
+         <a href="#modalSignin" id="goSignin">已經有帳戶了？點此登入</a>
+		</div>
+	</div>
+	<div id="overlay"></div>
 
    <!-- <main class="main">
    </main> -->

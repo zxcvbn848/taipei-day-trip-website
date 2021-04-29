@@ -13,7 +13,8 @@ def getUser():
       if "email" in session:
          name = session["name"]
          email = session["email"]
-
+      # name = "Andy"
+      # email = "Andy@gmail.com"
          user = selectUser(name = name, email = email)
          if user:
             data = {
