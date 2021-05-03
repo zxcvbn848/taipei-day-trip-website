@@ -17,9 +17,23 @@ const circleAreaElement = document.getElementsByClassName('circle-area')[0];
 const idInput = document.getElementById('idInput');
 idInput.value = id;
 
+const halfDayInput = document.querySelectorAll('[name=halfDay]');
+const feeNumberElement = document.getElementsByClassName('fee-number')[0];
+halfDayInput.forEach(halfDay => halfDay.addEventListener('change', priceShow));
+function priceShow() {
+   let halfDayChecked = document.querySelector('[name=halfDay]:checked');
+   if (halfDayChecked.value === 'morning') {
+      feeNumberElement.innerText = '2000';
+      console.log(feeNumberElement.innerText);
+   } else if (halfDayChecked.value === 'afternoon') {
+      feeNumberElement.innerText = '2500';
+      console.log(feeNumberElement.innerText);
+   } 
+}
+priceShow();
+
 const priceInput = document.getElementById('priceInput');
-const fee = document.getElementsByClassName('fee')[0].innerText.split(' ')[1];
-priceInput.value = fee;
+priceInput.value = feeNumberElement.innerText;
 
 showAttraction();
 

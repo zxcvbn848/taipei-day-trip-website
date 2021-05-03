@@ -38,21 +38,21 @@
    }
 
    /* attraction page */
-   /* TBD */
    .attraction-introduction {
+      width: 95%;
       height: auto;
    }
 
    .attraction-introduction .carousel {   
       width: 45%;
-      /* height: 100%; */
 
-      aspect-ratio: 8 / 7;
+      aspect-ratio: 9 / 7;
    }   
 
    .attraction-introduction .information {
+      gap: 20px;
+
       width: 50%;
-      aspect-ratio: 9 / 7;   
    }
 
    .attraction-introduction .information .name {
@@ -64,12 +64,24 @@
    }
 
    .attraction-introduction .information .schedule-order {
+      grid-template-columns: 80px 150px;
+      gap: 10px;
+
       height: auto;
-      aspect-ratio: 13 / 7;   
+      aspect-ratio: 2 / 1;   
+   }
+
+   .attraction-introduction .information .schedule-order #form {
+      height: 70%;
+   }
+
+   .attraction-introduction .information .schedule-order .date input {
+      max-width: 80%;
+      padding: 5px 10px;
    }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 950px) {
    .header {
       height: 280px;
       overflow: hidden;
@@ -156,7 +168,7 @@
    .attraction-introduction {
       display: flex; flex-direction: column;
       gap: 20px;
-      max-width: 100%;
+      width: 100%;
       height: auto;
    }
 
@@ -178,18 +190,29 @@
       gap: 20px;
 
       width: 100%;
+      height: 50%;
    
       padding: 10px 10px;
    }
 
    .attraction-introduction .information .schedule-order {
-      gap: 20px;
+      justify-content: center;
+      gap: 15px;
 
-      height: auto;
-      aspect-ratio: 340 / 300;
+      height: 300px;
    }
 
-   /* TBD */
+   .attraction-introduction .information .schedule-order .text {
+      line-height: 26px;
+   }
+
+
+   .attraction-introduction .information .schedule-order #form {
+      gap: 0px 5px;
+   
+      height: auto;
+   }
+
    hr {
       bottom: 5%;
    }
