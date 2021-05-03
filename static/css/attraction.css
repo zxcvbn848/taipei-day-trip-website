@@ -184,6 +184,8 @@
 .attraction-introduction .information .schedule-order .date input {
    border: none;
    outline: none;
+   background: #FFFFFF;
+
    font-size: 16px;
    padding: 5px 10px;
 }

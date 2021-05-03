@@ -24,10 +24,8 @@ function priceShow() {
    let halfDayChecked = document.querySelector('[name=halfDay]:checked');
    if (halfDayChecked.value === 'morning') {
       feeNumberElement.innerText = '2000';
-      console.log(feeNumberElement.innerText);
    } else if (halfDayChecked.value === 'afternoon') {
       feeNumberElement.innerText = '2500';
-      console.log(feeNumberElement.innerText);
    } 
 }
 priceShow();
