@@ -127,14 +127,67 @@ def insertUser(**kwargs):
 
    except Exception as e:
       print(e)
-      return None
 # ====================
 # for /api/booking
 def selectBooking(**kwargs):
-   pass
+   # bookingsDataList = []
+   try:
+      sql_cmd = """
+               SELECT attractionId, date, time, price
+               FROM bookings 
+               """
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiResult = taipeiCursor.fetchone()
+      if taipeiResult:
+         bookingData = dict(zip(taipeiCursor.column_names, taipeiResult))
+         return bookingData
+      else:
+         return None
+   except Exception as e:
+      print(e)
+      return None
 
 def insertBooking(**kwargs):
-   pass
+   try:
+      insertColumn = ''
+      insertValue = ''
+
+      for key in kwargs:
+         insertColumn += f"{ key }, "
+         if type(kwargs[key]) == str:
+            insertValue += f"'{ kwargs[key] }', "
+         else: 
+            insertValue += f"{ kwargs[key] }, "
+
+      insertColumn = insertColumn[:-2]
+      insertValue = insertValue[:-2]
+      print(insertValue)      
+
+      sql_cmd = f"""
+            INSERT INTO bookings ({ insertColumn })
+            VALUES ({ insertValue })
+            """
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiDB.commit()
+
+   except Exception as e:
+      print(e)
 
 def deleteBooking(**kwargs):
-   pass
+   try:
+      deleteBookingId = kwargs["id"]
+
+      sql_cmd = f"""
+            DELETE FROM bookings 
+            WHERE attractionId = {deleteBookingId}
+            """
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiDB.commit()
+   except Exception as e:
+      print(e)
