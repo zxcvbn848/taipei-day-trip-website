@@ -186,6 +186,10 @@
       height: 100%;
    }
 
+   .attraction-introduction .carousel .circle-area .circle {
+      margin: 0px 6px;
+   }
+
    .attraction-introduction .information {
       gap: 20px;
 
