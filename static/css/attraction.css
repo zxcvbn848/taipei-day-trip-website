@@ -276,6 +276,7 @@ section {
    font-style: normal;
    font-weight: normal;
    font-size: 16px;
+   line-height: 35px;
 
    color: #666666;
 }
@@ -284,7 +285,7 @@ section .descrption,
 section .addressArea,
 section .transportArea {
    width: 100%;
-   margin: 10px auto;
+   margin: 20px auto;
 }
 
 section .addressArea .title,

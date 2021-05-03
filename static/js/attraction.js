@@ -23,9 +23,9 @@ halfDayInput.forEach(halfDay => halfDay.addEventListener('change', priceShow));
 function priceShow() {
    let halfDayChecked = document.querySelector('[name=halfDay]:checked');
    if (halfDayChecked.value === 'morning') {
-      feeNumberElement.innerText = '2000';
+      feeNumberElement.innerText = 2000;
    } else if (halfDayChecked.value === 'afternoon') {
-      feeNumberElement.innerText = '2500';
+      feeNumberElement.innerText = 2500;
    } 
 }
 priceShow();
