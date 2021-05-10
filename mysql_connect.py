@@ -14,6 +14,11 @@ taipeiDB = mysql.connector.connect(
    charset = "utf8"
 )
 
+try:
+   taipeiDB.ping()
+except mysql.connector.errors.InterfaceError:
+   taipeiDB.reconnect()
+
 taipeiCursor = taipeiDB.cursor()
 
 # ====================
