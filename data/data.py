@@ -16,6 +16,18 @@ websiteDB = mysql.connector.connect(
 
 webCursor = websiteDB.cursor()
 
+
+webCursor.execute("""
+   CREATE TABLE IF NOT EXISTS attractions(
+      id BIGINT NOT NULL, name VARCHAR(255) NOT NULL, category VARCHAR(255) NOT NULL, 
+      description TEXT NOT NULL, address VARCHAR(255) NOT NULL, transport TEXT, 
+      mrt VARCHAR(255), latitude FLOAT NOT NULL, longitude FLOAT NOT NULL, 
+      images TEXT NOT NULL,
+      PRIMARY KEY (id)) charset=utf8;
+   """)
+
+websiteDB.commit()
+
 with open("taipei-attractions.json", "r", encoding="utf-8") as file:
    data_dict = json.load(file)
    results = data_dict["result"]["results"]
@@ -45,5 +57,4 @@ with open("taipei-attractions.json", "r", encoding="utf-8") as file:
       webCursor.execute(sql_cmd, (id, name, category, description, address, transport, mrt, latitude, longitude, imagesUrlListJson))
 
       websiteDB.commit()
-
 
