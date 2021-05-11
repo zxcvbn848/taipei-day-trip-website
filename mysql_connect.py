@@ -5,19 +5,22 @@ import json
 
 load_dotenv()
 
-taipeiDB = mysql.connector.connect(
-   host = "127.0.0.1",
-   port = 3306,
-   user = "root",
-   password = "ZackAndy167817?",
-   database = "taipei",
-   charset = "utf8"
-)
+def init_db():
+   return mysql.connector.connect(
+      host = os.getenv("SERVER_HOST"),
+      port = os.getenv("SERVER_PORT"),
+      user = os.getenv("SERVER_USER"),
+      password = os.getenv("SERVER_PASSWORD"),
+      database = os.getenv("SERVER_DATABASE"),
+      charset = "utf8")
 
-try:
-   taipeiDB.ping()
-except mysql.connector.errors.InterfaceError:
-   taipeiDB.reconnect()
+taipeiDB = init_db()
+
+# try:
+#    taipeiDB.ping(True)
+# except mysql.connector.Error as err:
+#    print(err)
+#    taipeiDB.reconnect()
 
 taipeiCursor = taipeiDB.cursor()
 
