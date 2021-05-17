@@ -16,12 +16,6 @@ def init_db():
 
 taipeiDB = init_db()
 
-# try:
-#    taipeiDB.ping(True)
-# except mysql.connector.Error as err:
-#    print(err)
-#    taipeiDB.reconnect()
-
 taipeiCursor = taipeiDB.cursor()
 
 # ====================
@@ -138,13 +132,12 @@ def insertUser(**kwargs):
 # ====================
 # for /api/booking
 def selectBooking(**kwargs):
-   # bookingsDataList = []
    try:
       sql_cmd = f"""
                SELECT a.id, a.name, a.address, a.images, b.date, b.time, b.price  
                FROM bookings b 
                JOIN attractions a ON b.attractionId = a.id 
-               WHERE b.userId = {kwargs["userId"]}
+               WHERE b.userId = { kwargs["userId"] }
                ORDER BY b.id DESC
                LIMIT 0, 1
                """
@@ -190,11 +183,11 @@ def insertBooking(**kwargs):
 
 def deleteBookingData(**kwargs):
    try:
-      deleteBookingId = kwargs["id"]
+      deleteId = kwargs["userId"]
 
       sql_cmd = f"""
             DELETE FROM bookings 
-            WHERE id = {deleteBookingId}
+            WHERE userId = { deleteId }
             """
 
       taipeiCursor.execute(sql_cmd)
@@ -202,3 +195,10 @@ def deleteBookingData(**kwargs):
       taipeiDB.commit()
    except Exception as e:
       print(e)
+# ====================
+# for /api/order
+def insertOrder(**kwargs):
+   pass
+
+def selectOrder(**kwargs):
+   pass
