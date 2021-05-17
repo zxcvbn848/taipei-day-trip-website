@@ -5,19 +5,16 @@ import json
 
 load_dotenv()
 
-taipeiDB = mysql.connector.connect(
-   host = "127.0.0.1",
-   port = 3306,
-   user = "root",
-   password = "ZackAndy167817?",
-   database = "taipei",
-   charset = "utf8"
-)
+def init_db():
+   return mysql.connector.connect(
+      host = os.getenv("SERVER_HOST"),
+      port = os.getenv("SERVER_PORT"),
+      user = os.getenv("SERVER_USER"),
+      password = os.getenv("SERVER_PASSWORD"),
+      database = os.getenv("SERVER_DATABASE"),
+      charset = "utf8")
 
-try:
-   taipeiDB.ping()
-except mysql.connector.errors.InterfaceError:
-   taipeiDB.reconnect()
+taipeiDB = init_db()
 
 taipeiCursor = taipeiDB.cursor()
 
@@ -135,13 +132,12 @@ def insertUser(**kwargs):
 # ====================
 # for /api/booking
 def selectBooking(**kwargs):
-   # bookingsDataList = []
    try:
       sql_cmd = f"""
                SELECT a.id, a.name, a.address, a.images, b.date, b.time, b.price  
                FROM bookings b 
                JOIN attractions a ON b.attractionId = a.id 
-               WHERE b.userId = {kwargs["userId"]}
+               WHERE b.userId = { kwargs["userId"] }
                ORDER BY b.id DESC
                LIMIT 0, 1
                """
@@ -187,11 +183,11 @@ def insertBooking(**kwargs):
 
 def deleteBookingData(**kwargs):
    try:
-      deleteBookingId = kwargs["id"]
+      deleteId = kwargs["userId"]
 
       sql_cmd = f"""
             DELETE FROM bookings 
-            WHERE id = {deleteBookingId}
+            WHERE userId = { deleteId }
             """
 
       taipeiCursor.execute(sql_cmd)
@@ -199,3 +195,10 @@ def deleteBookingData(**kwargs):
       taipeiDB.commit()
    except Exception as e:
       print(e)
+# ====================
+# for /api/order
+def insertOrder(**kwargs):
+   pass
+
+def selectOrder(**kwargs):
+   pass
