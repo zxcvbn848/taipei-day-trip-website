@@ -1,5 +1,3 @@
-import { tappayDealWith } from './tappay.js';
-
 let userId;
 
 /* user name */
@@ -177,69 +175,167 @@ function deleteBooking() {
    }
 }
 
+/* Tappay */
+TPDirect.setupSDK(20254, 'app_OJvQf0k7VFRyQgrs8HQYLXgYTcPr1WF4HBarLQ9a0xlaHFG0FPF5GCruoSnW', 'sandbox');
+
+TPDirect.card.setup({
+   fields: {
+      number: {
+         element: '#card-number',
+         placeholder: '**** **** **** ****'
+      },
+      expirationDate: {
+         element: '#overdue-date',
+         placeholder: 'MM / YY'
+      },
+      ccv: {
+         element: '#verified-password',
+         placeholder: 'ccv'
+      }
+   },
+   styles: {
+      'input.ccv': {
+         'font-size': '16px'
+      },
+      'input.expiration-date': {
+         'font-size': '16px'
+      },
+      'input.card-number': {
+         'font-size': '16px'
+      }
+   }
+});
+
+TPDirect.card.onUpdate(update => {
+   const orderButton = document.querySelector('#order-button');
+   if (update.canGetPrime) {
+      // Enable submit Button to get prime.
+      orderButton.removeAttribute('disabled');
+   } else {
+      // Disable submit Button to get prime.
+      orderButton.setAttribute('disabled', true);
+   }
+});
+
 /* go /api/order */
 const orderForm = document.getElementById('order-form');
 orderForm.addEventListener('submit', e => {
    e.preventDefault();
 
-   goOrder();
-})
-
-function goOrder() {
    const yes = confirm('您確定要訂購此行程並付款嗎？');
-
-   // TBD
-   const prime = 'adgb45f6';
-
-   const price = document.getElementById('total-price').value;
-
-   const attractionId = docuement.getElementById('attraction-id').value;
-   const attractionName = docuement.getElementById('attraction-name').value;
-   const address = docuement.getElementById('address').value;
-   const image = docuement.getElementById('attraction-image').value;
-
-   const date = document.getElementById('date').value;
-   const time = document.getElementById('time').value;
-
-   const name = document.getElementById('name').value;
-   const email = docuement.getElementById('email').value;
-   const phoneNumber = document.getElementById('phone-number').value;
-
    if (yes) {
-      const src = '/api/booking';
-      fetch(src, {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify({
-            "prime": prime,
-            "order": {
-               "price": price,
-               "trip": {
-                  "attraction": {
-                     "id": attractionId,
-                     "name": attractionName,
-                     "address": address,
-                     "image": image
-                  },
-                  "date": date,
-                  "time": time
-               },
-               "contact": {
-                  "name": name,
-                  "email": email,
-                  "phone": phoneNumber
-               }
-            }
-         })
-      })
-         .then(response => response.json())
-         .then(result => {
+      getPrime();
+   }
+   return;
+});
 
-         })
-         .catch(err => console.log('錯誤', err));
-   } else {
+function getPrime() {
+   // 取得 TapPay Fields 的 status
+   const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+
+   // 確認是否可以 getPrime
+   if (tappayStatus.canGetPrime === false) {
+      console.log('can not get prime');
       return;
    }
+   
+   // Get prime
+   TPDirect.card.getPrime(result => {
+      if (result.status !== 0) {
+         console.log('get prime error ' + result.msg);
+         return;
+      }
+      // console.log('get prime success, prime: ' + result.card.prime);
+      const prime = result.card.prime;
+      goOrder(prime);
+   });
+}
+
+function refreshOrder() {
+   const src = '/api/booking';
+   fetch(src, {
+      method: 'DELETE',
+      headers: {
+         'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+         "userId": userId,
+      })
+   })
+      .then(response => response.json())
+      .then(result => {
+         const deleteSuccess = result['ok'];
+         const deleteFailed = result['error'];
+
+         if (deleteSuccess) {
+            location.reload();
+         }
+         if (deleteFailed) {
+            alert(result['message']);
+         }
+      })
+      .catch(err => console.log('錯誤', err));
+}
+
+function goOrder(prime) {
+   const priceInput = document.getElementById('total-price');
+
+   const attractionIdInput = document.getElementById('attraction-id');
+   const attractionNameInput = document.getElementById('attraction-name');
+   const addressInput = document.getElementById('address');
+   const imageInput = document.getElementById('attraction-image');
+
+   const dateInput = document.getElementById('date');
+   const timeInput = document.getElementById('time');
+
+   const nameInput = document.getElementById('name');
+   const emailInput = document.getElementById('email');
+   const phoneNumberInput = document.getElementById('phone-number');
+
+
+   const src = '/api/orders';
+   fetch(src, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+         "prime": prime,
+         "order": {
+            "price": priceInput.value,
+            "trip": {
+               "attraction": {
+                  "id": attractionIdInput.value,
+                  "name": attractionNameInput.value,
+                  "address": addressInput.value,
+                  "image": imageInput.value
+               },
+               "date": dateInput.value,
+               "time": timeInput.value
+            },
+            "contact": {
+               "name": nameInput.value,
+               "email": emailInput.value,
+               "phone": phoneNumberInput.value
+            }
+         }
+      })
+   })
+      .then(response => response.json())
+      .then(result => {
+         const orderData = result.data;
+         const orderFailed = result.error;
+         
+         if (orderData) {
+            console.log(orderData);
+            refreshOrder();
+            alert(orderData.payment.message);
+            // parent.location.href = '/';
+         } 
+
+         if (orderFailed) {
+            alert(result.message);
+         }
+      })
+      .catch(err => console.log('錯誤', err));   
 }

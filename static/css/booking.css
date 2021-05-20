@@ -181,7 +181,7 @@
 }
 
 .booking .user-data .user-detail input,
-.booking .credit-card-data .credit-card-detail input {
+.booking .credit-card-data .credit-card-detail .tappay-card {
    width: 200px;
    height: 40px;
 
@@ -201,10 +201,14 @@
 }
 
 .booking .user-data .user-detail input:hover,
-.booking .credit-card-data .credit-card-detail input:hover {
+.booking .user-data .user-detail input:focus,
+.booking .credit-card-data .credit-card-detail .tappay-card:hover {
    border: 2px ridge blue;
 }
 
+.tappay-field-focus {
+   border: 2px ridge blue;
+}
 
 .booking .user-data .notice-message {
    font-family: Noto Sans TC;
@@ -261,6 +265,9 @@
    background-color: rgb(0, 68, 255);
 }
 
+.booking .final-check .submit-button:disabled {
+   background-color: gray;
+}
 hr {
    position: relative;
    right: 100px;

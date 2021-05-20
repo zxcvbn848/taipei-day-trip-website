@@ -138,8 +138,6 @@ def selectBooking(**kwargs):
                FROM bookings b 
                JOIN attractions a ON b.attractionId = a.id 
                WHERE b.userId = { kwargs["userId"] }
-               ORDER BY b.id DESC
-               LIMIT 0, 1
                """
 
       taipeiCursor.execute(sql_cmd)
@@ -181,6 +179,31 @@ def insertBooking(**kwargs):
    except Exception as e:
       print(e)
 
+def updateBooking(userId, **kwargs):
+   try:
+      updateColumnAndValue = ""
+
+      for key in kwargs:
+         if type(kwargs[key]) == str:
+            updateColumnAndValue += f"{ key } = '{ kwargs[key] }', "
+         else: 
+            updateColumnAndValue += f"{ key } = { kwargs[key] }, "
+
+      updateColumnAndValue = updateColumnAndValue[:-2]
+
+      sql_cmd = f"""
+            UPDATE bookings 
+            SET { updateColumnAndValue }
+            WHERE userId = { userId }
+            """
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiDB.commit()
+
+   except Exception as e:
+      print(e)
+
 def deleteBookingData(**kwargs):
    try:
       deleteId = kwargs["userId"]
@@ -198,7 +221,54 @@ def deleteBookingData(**kwargs):
 # ====================
 # for /api/order
 def insertOrder(**kwargs):
-   pass
+   try:
+      insertColumn = ''
+      insertValue = ''
 
-def selectOrder(**kwargs):
-   pass
+      for key in kwargs:
+         insertColumn += f"{ key }, "
+         if type(kwargs[key]) == str:
+            insertValue += f"'{ kwargs[key] }', "
+         else: 
+            insertValue += f"{ kwargs[key] }, "
+
+      insertColumn = insertColumn[:-2]
+      insertValue = insertValue[:-2]
+
+      sql_cmd = f"""
+            INSERT INTO orders ({ insertColumn })
+            VALUES ({ insertValue })
+            """
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiDB.commit()
+
+   except Exception as e:
+      print(e)
+
+def selectOrder(number):
+   try:
+      sql_cmd = f"""
+               SELECT 
+                  o.number, o.price, o.date, o.time, o.status, o.attractionId, o.phone,
+                  a.name AS attr_name, a.address, a.images,
+                  u.name AS user_name, u.email
+               FROM orders o
+               JOIN attractions a ON o.attractionId = a.id
+               JOIN users u ON o.userId = u.id
+               WHERE number = '{ number }'
+               """
+
+      taipeiCursor.execute(sql_cmd)
+
+      taipeiResult = taipeiCursor.fetchone()
+
+      if taipeiResult:
+         orderData = dict(zip(taipeiCursor.column_names, taipeiResult))
+         return orderData
+      else:
+         return None
+   except Exception as e:
+      print(e)
+      return None
