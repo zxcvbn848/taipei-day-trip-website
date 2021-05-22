@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")
 
 from flask import request, Blueprint, jsonify, session
+from datetime import datetime
 import json
 import requests
 
@@ -11,7 +12,6 @@ api_order = Blueprint("api_order", __name__)
 
 @api_order.route("/orders", methods=["POST"])
 def postOrders():
-   # TBD
    try:
       if "user" in session:
          # Set Main Keys to Variables
@@ -20,7 +20,6 @@ def postOrders():
          tripJson = orderJson["trip"]
          attractionJson = tripJson["attraction"]
          contactJson = orderJson["contact"]
-
 
          # Get information
          prime = requestJson["prime"]
@@ -115,7 +114,7 @@ def getOrder(number):
                      "address": selectedOrder["address"],
                      "image": json.loads(selectedOrder["images"])[0]
                   },
-                  "date": selectedOrder["date"],
+                  "date": datetime.strftime(selectedOrder["date"], "%Y-%m-%d"),
                   "time": selectedOrder["time"],
                },
                "contact": {

@@ -7,7 +7,7 @@ import json
 
 from mysql_connect import selectBooking, insertBooking, updateBooking, deleteBookingData
  
-api_booking = Blueprint("api_booking", __name__)
+api_booking = Blueprint("api_booking", __name__) 
 
 @api_booking.route("/booking", methods=["GET"])
 def getBooking():
@@ -18,8 +18,6 @@ def getBooking():
          selectedBooking = selectBooking(userId = userId)
          
          if selectedBooking:
-            date = datetime.strftime(selectedBooking["date"], "%Y-%m-%d")
-
             data = {
                "attraction": {
                   "id": selectedBooking["id"],
@@ -27,7 +25,7 @@ def getBooking():
                   "address": selectedBooking["address"],
                   "image": json.loads(selectedBooking["images"])[0]
                },
-               "date": date,
+               "date": datetime.strftime(selectedBooking["date"], "%Y-%m-%d"),
                "time": selectedBooking["time"],
                "price": selectedBooking["price"],
             }
@@ -39,7 +37,7 @@ def getBooking():
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })
       
 @api_booking.route("/booking", methods=["POST"])
-def postBooking():
+def postBooking(): 
    try:
       if "user" in session:
          attractionId = int(request.get_json()["attrationId"])
@@ -82,4 +80,3 @@ def deleteBooking():
    except Exception as e:
       print(e)
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })
-

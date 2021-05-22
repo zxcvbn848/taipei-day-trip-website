@@ -1,33 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Thank You</title>
-   <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet" type="text/css" media="all">
-   <link href="{{ url_for('static', filename='css/thankyou.css') }}" rel="stylesheet" type="text/css" media="all">
-   <link href="{{ url_for('static', filename='css/media.css') }}" rel="stylesheet" type="text/css" media="all">
-   <script defer src="{{ url_for('static', filename='js/index.js') }}"></script>
-</head>
-<body>
-   <div class="nav">
-      <nav class="navbar">
-         <div class="title"><a href="/">台北一日遊</a></div>
-         <div class="navbar-links">
-            <ul>
-               <li><a href="/booking" target="_blank">預定行程</a></li>
-               <li><button data-modal-target="#modalSignin">登入/註冊</button></li>
-            </ul>
+{% extends "base.html" %}
+
+{% block title %}Thank You{% endblock %}
+
+{% block css %}<link href="{{ url_for('static', filename='css/thankyou.css') }}" rel="stylesheet" type="text/css" media="all">{% endblock %}
+
+{% block js %}<script defer src="{{ url_for('static', filename='js/thankyou.js') }}"></script>{% endblock %}
+
+{% block content %}
+<div class="welcome"></div>
+<div class="order-information">
+   <div class="order-attraction">
+      <div class="attraction-image"></div>
+      <div class="information">
+         <div class="name"></div>
+         <div class="detail">
+            <div class="date-title">日期：</div>
+            <div class="date"></div>
+            <div class="time-title">時間：</div>
+            <div class="time"></div>
+            <div class="fee-title">費用：</div>
+            <div class="fee"></div>
+            <div class="address-title">地點：</div>
+            <div class="address"></div>
          </div>
-      </nav>
+      </div>
    </div>
-
-   <main class="main">
-   </main>
-
-   <footer class="footer">
-      <div class="text">COPYRIGHT © 2021 台北一日遊</div>
-   </footer>      
-</body>
-</html>
+   <hr>
+   <div class="user-data">
+      <div class="title">您的聯絡資訊</div>
+      <div class="user-detail">
+         <label for="name">聯絡姓名：</label>
+         <div class="contact-name"></div>
+         <label for="email">連絡信箱：</label>
+         <div class="contact-email"></div>
+         <label for="phone-number">手機號碼：</label>
+         <div class="contact-phone"></div>
+      </div>
+      <div class="notice-message">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
+   </div>
+</div>
+{% endblock %}

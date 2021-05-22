@@ -74,9 +74,8 @@ signinForm.addEventListener('submit', e => {
    signinCheck();
 });
 
+/* signup */
 function signupCheck() {
-   const nameElement = document.getElementById('signupName');
-   const emailElememt = document.getElementById('signupEmail');
    const passwordElement = document.getElementById('signupPassword');
 
    /* 資料驗證，待進行 */
@@ -86,6 +85,14 @@ function signupCheck() {
    /* 加密，待進行 */
 
    const src = '/api/user';
+   fetchPostUserAPI(src);
+}
+
+function fetchPostUserAPI(src) {
+   const nameElement = document.getElementById('signupName');
+   const emailElememt = document.getElementById('signupEmail');
+   const passwordElement = document.getElementById('signupPassword');
+
    fetch(src, {
       method: 'POST',
       headers: {
@@ -102,39 +109,48 @@ function signupCheck() {
          const signupSuccess = result['ok'];
          const signupFailed = result['error'];
 
-         const signupMessageElement = document.getElementById('signupMessage');
-         signupMessageElement.innerText = '';
-         signupMessageElement.classList.remove('show');
-         if (signupSuccess) {
-            signupMessageElement.classList.add('show');
-            signupMessageElement.innerText = '註冊成功';
-            signupMessageElement.style.color = 'green';
-
-            nameElement.value = '';
-            nameElement.innerText = '';
-            emailElememt.value = '';
-            emailElememt.innerText = '';
-            passwordElement.value = '';
-            passwordElement.innerText = '';
-         }
-
-         if (signupFailed) {
-            signupMessageElement.innerText = result['message'];
-            signupMessageElement.classList.add('show');
-
-            nameElement.value = '';
-            nameElement.innerText = '';
-            emailElememt.value = '';
-            emailElememt.innerText = '';
-            passwordElement.value = '';
-            passwordElement.innerText = '';
-         }
+         signupSuccessDetermine(signupSuccess, signupFailed, result);
       })
       .catch(err => console.log('錯誤', err));
 }
 
+function signupSuccessDetermine(signupSuccess, signupFailed, result) {
+   const nameElement = document.getElementById('signupName');
+   const emailElememt = document.getElementById('signupEmail');
+   const passwordElement = document.getElementById('signupPassword');
+
+   const signupMessageElement = document.getElementById('signupMessage');
+   signupMessageElement.innerText = '';
+   signupMessageElement.classList.remove('show');
+   
+   if (signupSuccess) {
+      signupMessageElement.classList.add('show');
+      signupMessageElement.innerText = '註冊成功';
+      signupMessageElement.style.color = 'green';
+
+      nameElement.value = '';
+      nameElement.innerText = '';
+      emailElememt.value = '';
+      emailElememt.innerText = '';
+      passwordElement.value = '';
+      passwordElement.innerText = '';
+   }
+
+   if (signupFailed) {
+      signupMessageElement.innerText = result['message'];
+      signupMessageElement.classList.add('show');
+
+      nameElement.value = '';
+      nameElement.innerText = '';
+      emailElememt.value = '';
+      emailElememt.innerText = '';
+      passwordElement.value = '';
+      passwordElement.innerText = '';
+   }
+}
+
+/* signin */
 function signinCheck() {
-   const emailElememt = document.getElementById('signinEmail');
    const passwordElement = document.getElementById('signinPassword');
 
    /* 資料驗證，待進行 */
@@ -145,6 +161,13 @@ function signinCheck() {
    /* 加密，待進行 */
    
    const src = '/api/user';
+   fetchPatchUserAPI(src);
+}
+
+function fetchPatchUserAPI(src) {
+   const emailElememt = document.getElementById('signinEmail');
+   const passwordElement = document.getElementById('signinPassword');
+   
    fetch(src, {
       method: 'PATCH',
       headers: {
@@ -160,64 +183,85 @@ function signinCheck() {
          const signinSuccess = result['ok'];
          const signinFailed = result['error'];
 
-         const signinMessageElement = document.getElementById('signinMessage');
-         signinMessageElement.innerText = '';
-         signinMessageElement.classList.remove('show');
-
-         if (signinSuccess) {
-            signinMessageElement.innerText = '';
-            signinMessageElement.classList.remove('show');
-
-            location.reload();
-            
-            closeModalButtons.forEach(button => {
-               const modal = button.closest('.modal'); 
-               closeModal(modal);
-            });
-               
-            emailElememt.value = '';
-            emailElememt.innerText = '';
-            passwordElement.value = '';
-            passwordElement.innerText = '';
-         }
-
-         if (signinFailed) {
-            signinMessageElement.innerText = result['message'];
-            signinMessageElement.classList.add('show');
-
-            emailElememt.value = '';
-            emailElememt.innerText = '';
-            passwordElement.value = '';
-            passwordElement.innerText = '';
-         }
+         signinSuccessDetermine(signinSuccess, signinFailed, result);
       })
       .catch(err => console.log('錯誤', err));
 }
 
+function signinSuccessDetermine(signinSuccess, signinFailed, result) {
+   const emailElememt = document.getElementById('signinEmail');
+   const passwordElement = document.getElementById('signinPassword');
+
+   const signinMessageElement = document.getElementById('signinMessage');
+   signinMessageElement.innerText = '';
+   signinMessageElement.classList.remove('show');
+
+   if (signinSuccess) {
+      signinMessageElement.innerText = '';
+      signinMessageElement.classList.remove('show');
+
+      location.reload();
+      
+      closeModalButtons.forEach(button => {
+         const modal = button.closest('.modal'); 
+         closeModal(modal);
+      });
+         
+      emailElememt.value = '';
+      emailElememt.innerText = '';
+      passwordElement.value = '';
+      passwordElement.innerText = '';
+   }
+
+   if (signinFailed) {
+      signinMessageElement.innerText = result['message'];
+      signinMessageElement.classList.add('show');
+
+      emailElememt.value = '';
+      emailElememt.innerText = '';
+      passwordElement.value = '';
+      passwordElement.innerText = '';
+   }
+}
+
+/* signout */
 function signout() {
    const yes = confirm('確定要登出嗎？');
+
+   signoutDetermine(yes);
+}
+
+function signoutDetermine(yes) {
    if (yes) {
       const src = '/api/user';
-      fetch(src, {
-         method: 'DELETE'
-      })
-         .then(response => response.json())
-         .then(result => {
-            const signoutSuccess = result['ok'];
-            const signoutFailed = result['error'];
-   
-            if (signoutSuccess) {          
-               location.reload(); 
-            }
-            if (signoutFailed) {
-               alert(result['message']);
-            }
-         })
-         .catch(err => console.log('錯誤', err));      
+      fetchDeleteUserAPI(src);
    } else {
-      alert('您決定保持登入狀態');
+      return;
    }
-   
+}
+
+function fetchDeleteUserAPI(src) {
+   fetch(src, {
+      method: 'DELETE'
+   })
+      .then(response => response.json())
+      .then(result => {
+         const signoutSuccess = result['ok'];
+         const signoutFailed = result['error'];
+         
+         signoutSuccessDetermine(signoutSuccess, signoutFailed, result);
+      })
+      .catch(err => console.log('錯誤', err));   
+}
+
+function signoutSuccessDetermine(signoutSuccess, signoutFailed, result) {
+   if (signoutSuccess) {
+      location.reload(); 
+      window.localStorage.removeItem('data');
+   }
+   if (signoutFailed) {
+      alert(result['message']);
+   }
 }
 
 signoutButton.addEventListener('click', signout);

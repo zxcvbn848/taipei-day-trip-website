@@ -206,29 +206,41 @@ form.addEventListener('submit', e => {
 
 function goBooking() {
    const getUserSrc = '/api/user';
+   fetchGetUserAPI(getUserSrc);
+
+   const postBookingSrc = '/api/booking';
+   fetchPostBookingAPI(postBookingSrc)
+}
+
+function fetchGetUserAPI(getUserSrc) {
    fetch(getUserSrc)
       .then(response => response.json())
       .then(result => {
          const userData = result.data;
-         if (userData) {
-            return;
-         } else {
-            const openModalButtons = document.querySelectorAll('[data-modal-target]');
-   
-            openModalButtons.forEach(button => {
-               const modal = document.querySelector(button.dataset.modalTarget); 
-               openModal(modal);
-            });
-         }
+         signinOrNot(userData);
       })
-      .catch(error => console.log(error));   
+      .catch(error => console.log(error));  
+}
 
+function signinOrNot(userData) {
+   if (userData) {
+      return;
+   } else {
+      const openModalButtons = document.querySelectorAll('[data-modal-target]');
+
+      openModalButtons.forEach(button => {
+         const modal = document.querySelector(button.dataset.modalTarget); 
+         openModal(modal);
+      });
+   }   
+}
+
+function fetchPostBookingAPI(postBookingSrc) {
    const id = document.getElementById('idInput').value;
    const date = document.getElementById('date').value;
    const time = document.querySelector('input[name=halfDay]:checked').value;
    const price = document.getElementById('priceInput').value;
 
-   const postBookingSrc = '/api/booking';
    fetch(postBookingSrc, {
       method: 'POST',
       headers: {
@@ -246,14 +258,18 @@ function goBooking() {
          const bookingSuccess = result['ok'];
          const bookingFalied = result['error'];
 
-         if (bookingSuccess) {
-            parent.location.href = '/booking';
-         }
-         if (bookingFalied) {
-            return;
-         }
+         bookingDetermine(bookingSuccess, bookingFalied);
       })
-      .catch(err => console.log('錯誤', err));   
+      .catch(err => console.log('錯誤', err)); 
+}
+
+function bookingDetermine(bookingSuccess, bookingFalied) {
+   if (bookingSuccess) {
+      parent.location.href = '/booking';
+   }
+   if (bookingFalied) {
+      return;
+   }
 }
 
 function openModal(modal) {

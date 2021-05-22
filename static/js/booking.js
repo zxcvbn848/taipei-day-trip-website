@@ -8,30 +8,34 @@ function getUser() {
       .then(result => {
          const userData = result.data;
 
-         const welcomeElement = document.getElementsByClassName('welcome')[0];
-         const nameElement = document.getElementById('name');
-         const emailElememt = document.getElementById('email');
-
-         if (userData) {
-            welcomeElement.innerText = `您好，${userData.name}，待預訂的行程如下：`;
-
-            nameElement.value = userData.name;
-            nameElement.innerText = userData.name;
-
-            emailElememt.value = userData.email;
-            emailElememt.innerText = userData.email;
-
-            userId = userData.id;
-         } else {
-/*             
-            const bookingElement = document.getElementsByClassName('booking')[0];
-
-            removeAllChildNodes(bookingElement);
- */
-            parent.location.href = '/';
-         }
+         createUserElement(userData);
       })
       .catch(error => console.log(error));
+}
+
+function createUserElement(userData) {
+   const welcomeElement = document.getElementsByClassName('welcome')[0];
+   const nameElement = document.getElementById('name');
+   const emailElememt = document.getElementById('email');
+
+   if (userData) {
+      welcomeElement.innerText = `您好，${userData.name}，待預訂的行程如下：`;
+
+      nameElement.value = userData.name;
+      nameElement.innerText = userData.name;
+
+      emailElememt.value = userData.email;
+      emailElememt.innerText = userData.email;
+
+      userId = userData.id;
+   } else {
+/*             
+      const bookingElement = document.getElementsByClassName('booking')[0];
+
+      removeAllChildNodes(bookingElement);
+*/
+      parent.location.href = '/';
+   }
 }
 
 getUser();
@@ -95,10 +99,10 @@ function createAPIElement(bookingData) {
    const time = bookingData.time;
    let actualTime;
    if (time === 'morning') {
-      actualTime = '早上 9 點到中午 12 點';
+      actualTime = '早上 9 點到下午 4 點';
    }
    if (time === 'afternoon') {
-      actualTime = '中午 12 點到下午 4 點';
+      actualTime = '下午 2 點到晚上 9 點';
    }
    const price = bookingData.price;
    const address = bookingData.attraction.address;
@@ -148,30 +152,38 @@ function deleteBooking() {
       this.parentElement.remove();
 
       const src = '/api/booking';
-      fetch(src, {
-         method: 'DELETE',
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify({
-            "userId": userId,
-         })
-      })
-         .then(response => response.json())
-         .then(result => {
-            const deleteSuccess = result['ok'];
-            const deleteFailed = result['error'];
-
-            if (deleteSuccess) {
-               location.reload();
-            }
-            if (deleteFailed) {
-               alert(result['message']);
-            }
-         })
-         .catch(err => console.log('錯誤', err));
+      fetchDeleteBookingAPI(src);
    } else {
       return;
+   }
+}
+
+function fetchDeleteBookingAPI(src) {
+   fetch(src, {
+      method: 'DELETE',
+      headers: {
+         'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+         "userId": userId,
+      })
+   })
+      .then(response => response.json())
+      .then(result => {
+         const deleteSuccess = result['ok'];
+         const deleteFailed = result['error'];
+
+         deleteBookingDetermine(deleteSuccess, deleteFailed);
+      })
+      .catch(err => console.log('錯誤', err));
+}
+
+function deleteBookingDetermine(deleteSuccess, deleteFailed) {
+   if (deleteSuccess) {
+      location.reload();
+   }
+   if (deleteFailed) {
+      alert(result['message']);
    }
 }
 
@@ -190,7 +202,7 @@ TPDirect.card.setup({
       },
       ccv: {
          element: '#verified-password',
-         placeholder: 'ccv'
+         placeholder: 'CVV'
       }
    },
    styles: {
@@ -268,7 +280,7 @@ function refreshOrder() {
          const deleteFailed = result['error'];
 
          if (deleteSuccess) {
-            location.reload();
+            return;
          }
          if (deleteFailed) {
             alert(result['message']);
@@ -327,14 +339,17 @@ function goOrder(prime) {
          const orderFailed = result.error;
          
          if (orderData) {
-            console.log(orderData);
+            window.localStorage.setItem('data', JSON.stringify(orderData));
+            
             refreshOrder();
+            
             alert(orderData.payment.message);
-            // parent.location.href = '/';
+            parent.location.href = '/thankyou';
          } 
 
          if (orderFailed) {
             alert(result.message);
+            location.reload();
          }
       })
       .catch(err => console.log('錯誤', err));   

@@ -86,6 +86,11 @@
    .booking .booking-attraction .information .detail {
       grid-template-columns: 50px 250px;
    }
+
+   /* thankyou page */
+   .order-information .order-attraction .information .detail {
+      grid-template-columns: 50px 250px;
+   }
 }
 
 @media (max-width: 950px) {
@@ -150,10 +155,15 @@
    .booking .booking-attraction .information .detail {
       grid-template-columns: 50px 350px;
    }   
+
+   /* order page */
+   .order-information .order-attraction .information .detail {
+      grid-template-columns: 50px 350px;
+   }   
 }
 
 @media (max-width: 900px) {
-   /* booking page */
+   /* booking page (including thankyou page) */
    .welcome {
       width: 100%;
       max-width: 100%;
@@ -163,6 +173,7 @@
       padding: 0;
    }
 
+   /* booking page */
    .booking {
       width: 100%;
       max-width: 100%;
@@ -201,6 +212,35 @@
 
    .booking .final-check {
       padding: 0px 10px;
+   }
+
+   /* thankyou page */
+   .order-information {
+      width: 100%;
+      max-width: 100%;
+
+      margin-left: 10px;
+      margin-right: 10px;
+      padding: 0;
+   }
+
+   /* order-attraction */
+   .order-information .order-attraction {
+      display: flex; flex-direction: column;
+      position: relative;
+      gap: 7px;
+   }
+
+   .order-information .order-attraction .attraction-image {
+      width: 100%;
+      height: auto;
+   
+      border-radius: 5px;
+   }
+
+   /* user data */
+   .order-information .user-data {
+      padding: 0px 10px;      
    }
 
    hr {
@@ -297,6 +337,11 @@
 
    /* booking page */
    .booking .booking-attraction .information .detail {
+      grid-template-columns: 50px 250px;
+   }
+
+   /* thankyou page */
+   .order-information .order-attraction .information .detail {
       grid-template-columns: 50px 250px;
    }
 }

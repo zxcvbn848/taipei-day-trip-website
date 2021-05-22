@@ -34,7 +34,7 @@ webCursor.execute("""
    CREATE TABLE IF NOT EXISTS bookings(
       id BIGINT NOT NULL AUTO_INCREMENT, 
       attractionId INT NOT NULL, 
-      userId BIGINT NOT NULL, 
+      userId BIGINT NOT NULL UNIQUE, 
       date DATE NOT NULL, 
       time VARCHAR(255) NOT NULL, 
       price INT NOT NULL, 

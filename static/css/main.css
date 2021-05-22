@@ -1,7 +1,7 @@
 .main {
    display: grid;
    grid-template-columns: repeat(4, 270px);
-   grid-template-rows: 242px repeat(auto-fill, 242px);
+   grid-template-rows: 242px;
    grid-gap: 30px;
 
    justify-items: stretch;
@@ -12,6 +12,7 @@
    width: auto;
    max-width: 100%;
    height: auto;
+   min-height: 39.2vh;
 
    margin: 55px auto;
 }

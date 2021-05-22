@@ -8,15 +8,19 @@ function signinConfirm() {
       .then(response => response.json())
       .then(result => {
          const userData = result.data;
-         if (userData) {
-            signinButton.classList.add('hidden');
-            signoutButton.classList.remove('hidden');
-         } else {
-            signinButton.classList.remove('hidden');
-            signoutButton.classList.add('hidden');
-         }
+         signinDetermine(userData);
       })
       .catch(error => console.log(error));
+}
+
+function signinDetermine(userData) {
+   if (userData) {
+      signinButton.classList.add('hidden');
+      signoutButton.classList.remove('hidden');
+   } else {
+      signinButton.classList.remove('hidden');
+      signoutButton.classList.add('hidden');
+   }
 }
 
 signinConfirm();
@@ -32,21 +36,25 @@ bookingLink.addEventListener('click', e => {
 function signinPopup() {
    const src = '/api/user';
    fetch(src)
-      .then(response => response.json())
-      .then(result => {
-         const userData = result.data;
-         if (userData) {
-            parent.location.href = '/booking';
-         } else {
-            const openModalButtons = document.querySelectorAll('[data-modal-target]');
-   
-            openModalButtons.forEach(button => {
-               const modal = document.querySelector(button.dataset.modalTarget); 
-               openModal(modal);
-            });
-         }
-      })
-      .catch(error => console.log(error));
+   .then(response => response.json())
+   .then(result => {
+      const userData = result.data;
+      goBookingDetermine(userData);
+   })
+   .catch(error => console.log(error));
+}
+
+function goBookingDetermine(userData) {
+   if (userData) {
+      parent.location.href = '/booking';
+   } else {
+      const openModalButtons = document.querySelectorAll('[data-modal-target]');
+
+      openModalButtons.forEach(button => {
+         const modal = document.querySelector(button.dataset.modalTarget); 
+         openModal(modal);
+      });
+   }
 }
 
 function openModal(modal) {

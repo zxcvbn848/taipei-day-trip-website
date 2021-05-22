@@ -1,22 +1,33 @@
-import mysql.connector
+from mysql.connector import pooling
 from dotenv import load_dotenv
 import os
 import json
 
 load_dotenv()
 
-def init_db():
-   return mysql.connector.connect(
-      host = os.getenv("SERVER_HOST"),
-      port = os.getenv("SERVER_PORT"),
-      user = os.getenv("SERVER_USER"),
-      password = os.getenv("SERVER_PASSWORD"),
-      database = os.getenv("SERVER_DATABASE"),
-      charset = "utf8")
+def connectToPool():
+   try:
+      connection_pool = pooling.MySQLConnectionPool(
+         pool_name = "taipei_pool",
+         pool_size = 10,
+         pool_reset_session = True,
+         host = os.getenv("SERVER_HOST"),
+         port = os.getenv("SERVER_PORT"),
+         user = os.getenv("SERVER_USER"),
+         password = os.getenv("SERVER_PASSWORD"),
+         database = os.getenv("SERVER_DATABASE"),
+         charset = "utf8")
 
-taipeiDB = init_db()
+      return connection_pool.get_connection()
 
-taipeiCursor = taipeiDB.cursor()
+   except Exception as e:
+      print(e)  
+
+def closePool(connection_object, taipeiCursor):
+   if connection_object.is_connected():
+      taipeiCursor.close()
+      connection_object.close()
+      print("MySQL connection is closed")
 
 # ====================
 # for /api/attraction
@@ -41,10 +52,14 @@ def selectAttractions(**kwargs):
                LIMIT %s, %s
                """
          value = (kwargs["keyword"], pageStart, pageInterval)
+      
+      connection_object = connectToPool()
 
-      taipeiCursor.execute(sql_cmd, value)
-
-      taipeiResults = taipeiCursor.fetchall()
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd, value)
+         taipeiResults = taipeiCursor.fetchall()
+      
       if taipeiResults:
          for taipeiResult in taipeiResults:
             attractionsData = dict(zip(taipeiCursor.column_names, taipeiResult))
@@ -56,6 +71,8 @@ def selectAttractions(**kwargs):
    except Exception as e:
       print(e)
       return None
+   finally:
+      closePool(connection_object, taipeiCursor)
 
 def selectAttraction(attractionId):
    try:
@@ -65,9 +82,12 @@ def selectAttraction(attractionId):
                WHERE id = { attractionId }
                """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiResult = taipeiCursor.fetchone()
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)
+         taipeiResult = taipeiCursor.fetchone()
 
       if taipeiResult:
          attractionData = dict(zip(taipeiCursor.column_names, taipeiResult))
@@ -78,6 +98,8 @@ def selectAttraction(attractionId):
    except Exception as e:
       print(e)
       return None
+   finally:
+      closePool(connection_object, taipeiCursor)     
 # ====================
 # for /api/user
 def selectUser(**kwargs):
@@ -93,9 +115,12 @@ def selectUser(**kwargs):
       
       sql_cmd = sql_cmd[:-5] # 扣除掉 " and "
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiResult = taipeiCursor.fetchone()
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)
+         taipeiResult = taipeiCursor.fetchone()      
 
       if taipeiResult:
          userData = dict(zip(taipeiCursor.column_names, taipeiResult))
@@ -105,6 +130,8 @@ def selectUser(**kwargs):
    except Exception as e:
       print(e)
       return None
+   finally:
+      closePool(connection_object, taipeiCursor)      
 
 def insertUser(**kwargs):
    try:
@@ -123,12 +150,16 @@ def insertUser(**kwargs):
             VALUES ({ insertValue })
             """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiDB.commit()
-
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)
+         connection_object.commit()
    except Exception as e:
       print(e)
+   finally:
+      closePool(connection_object, taipeiCursor)        
 # ====================
 # for /api/booking
 def selectBooking(**kwargs):
@@ -140,9 +171,13 @@ def selectBooking(**kwargs):
                WHERE b.userId = { kwargs["userId"] }
                """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiResult = taipeiCursor.fetchone()
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)               
+         taipeiResult = taipeiCursor.fetchone()
+
       if taipeiResult:
          bookingData = dict(zip(taipeiCursor.column_names, taipeiResult))
          return bookingData
@@ -151,6 +186,8 @@ def selectBooking(**kwargs):
    except Exception as e:
       print(e)
       return None
+   finally:
+      closePool(connection_object, taipeiCursor)        
 
 def insertBooking(**kwargs):
    try:
@@ -172,12 +209,16 @@ def insertBooking(**kwargs):
             VALUES ({ insertValue })
             """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiDB.commit()
-
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)                
+         connection_object.commit()
    except Exception as e:
       print(e)
+   finally:
+      closePool(connection_object, taipeiCursor)        
 
 def updateBooking(userId, **kwargs):
    try:
@@ -197,12 +238,16 @@ def updateBooking(userId, **kwargs):
             WHERE userId = { userId }
             """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiDB.commit()
-
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)                
+         connection_object.commit()            
    except Exception as e:
       print(e)
+   finally:
+      closePool(connection_object, taipeiCursor)        
 
 def deleteBookingData(**kwargs):
    try:
@@ -213,11 +258,16 @@ def deleteBookingData(**kwargs):
             WHERE userId = { deleteId }
             """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiDB.commit()
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)                
+         connection_object.commit()              
    except Exception as e:
       print(e)
+   finally:
+      closePool(connection_object, taipeiCursor)        
 # ====================
 # for /api/order
 def insertOrder(**kwargs):
@@ -240,12 +290,16 @@ def insertOrder(**kwargs):
             VALUES ({ insertValue })
             """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiDB.commit()
-
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)             
+         connection_object.commit()
    except Exception as e:
       print(e)
+   finally:
+      closePool(connection_object, taipeiCursor)        
 
 def selectOrder(number):
    try:
@@ -260,9 +314,12 @@ def selectOrder(number):
                WHERE number = '{ number }'
                """
 
-      taipeiCursor.execute(sql_cmd)
+      connection_object = connectToPool()
 
-      taipeiResult = taipeiCursor.fetchone()
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)                
+         taipeiResult = taipeiCursor.fetchone()
 
       if taipeiResult:
          orderData = dict(zip(taipeiCursor.column_names, taipeiResult))
@@ -272,3 +329,5 @@ def selectOrder(number):
    except Exception as e:
       print(e)
       return None
+   finally:
+      closePool(connection_object, taipeiCursor)        
