@@ -5,30 +5,25 @@ import json
 
 load_dotenv()
 
-def connectToPool():
-   try:
-      connection_pool = pooling.MySQLConnectionPool(
-         pool_name = "taipei_pool",
-         pool_size = 10,
-         pool_reset_session = True,
-         host = os.getenv("SERVER_HOST"),
-         port = os.getenv("SERVER_PORT"),
-         user = os.getenv("SERVER_USER"),
-         password = os.getenv("SERVER_PASSWORD"),
-         database = os.getenv("SERVER_DATABASE"),
-         charset = "utf8")
-
-      return connection_pool.get_connection()
-
-   except Exception as e:
-      print(e)  
+try:
+   connection_pool = pooling.MySQLConnectionPool(
+      pool_name = "taipei_pool",
+      pool_size = 5,
+      pool_reset_session = True,
+      host = os.getenv("SERVER_HOST"),
+      port = os.getenv("SERVER_PORT"),
+      user = os.getenv("SERVER_USER"),
+      password = os.getenv("SERVER_PASSWORD"),
+      database = os.getenv("SERVER_DATABASE"),
+      charset = "utf8")
+except Exception as e:
+   print(e)  
 
 def closePool(connection_object, taipeiCursor):
    if connection_object.is_connected():
       taipeiCursor.close()
       connection_object.close()
       print("MySQL connection is closed")
-
 # ====================
 # for /api/attraction
 def selectAttractions(**kwargs):
@@ -53,7 +48,7 @@ def selectAttractions(**kwargs):
                """
          value = (kwargs["keyword"], pageStart, pageInterval)
       
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -82,7 +77,7 @@ def selectAttraction(attractionId):
                WHERE id = { attractionId }
                """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -115,7 +110,7 @@ def selectUser(**kwargs):
       
       sql_cmd = sql_cmd[:-5] # 扣除掉 " and "
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -150,7 +145,7 @@ def insertUser(**kwargs):
             VALUES ({ insertValue })
             """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -171,7 +166,7 @@ def selectBooking(**kwargs):
                WHERE b.userId = { kwargs["userId"] }
                """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -209,7 +204,7 @@ def insertBooking(**kwargs):
             VALUES ({ insertValue })
             """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -238,7 +233,7 @@ def updateBooking(userId, **kwargs):
             WHERE userId = { userId }
             """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -258,7 +253,7 @@ def deleteBookingData(**kwargs):
             WHERE userId = { deleteId }
             """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -290,7 +285,7 @@ def insertOrder(**kwargs):
             VALUES ({ insertValue })
             """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()
@@ -314,7 +309,7 @@ def selectOrder(number):
                WHERE number = '{ number }'
                """
 
-      connection_object = connectToPool()
+      connection_object = connection_pool.get_connection()
 
       if connection_object.is_connected():
          taipeiCursor = connection_object.cursor()

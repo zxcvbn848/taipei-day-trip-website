@@ -1,8 +1,6 @@
-from flask import Flask, Blueprint, render_template, session
+from flask import Flask, render_template
 from datetime import timedelta
 import os
-
-from mysql_connect import selectAttractions, selectAttraction
 
 from api.attraction import api_attraction
 from api.user import api_user

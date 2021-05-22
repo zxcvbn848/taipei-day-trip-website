@@ -139,6 +139,7 @@ function signupSuccessDetermine(signupSuccess, signupFailed, result) {
    if (signupFailed) {
       signupMessageElement.innerText = result['message'];
       signupMessageElement.classList.add('show');
+      signupMessageElement.style.color = 'red';
 
       nameElement.value = '';
       nameElement.innerText = '';

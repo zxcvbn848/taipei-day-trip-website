@@ -32,6 +32,8 @@ def getBooking():
             return jsonify({ "data": data })
          else:
             return jsonify({ "data": None })
+      else:
+         return jsonify({ "error": True, "message": "請先登入" })            
    except Exception as e:
       print(e)
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })

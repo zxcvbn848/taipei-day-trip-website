@@ -4,6 +4,7 @@ sys.path.append("..")
 from flask import request, Blueprint, jsonify, session
 
 from mysql_connect import selectUser, insertUser
+
 api_user = Blueprint("api_user", __name__)
 
 @api_user.route("/user", methods=["GET"])
