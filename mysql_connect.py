@@ -342,7 +342,7 @@ def updateOrder(number, **kwargs):
       sql_cmd = f"""
             UPDATE orders 
             SET { updateColumnAndValue }
-            WHERE number = { number }
+            WHERE number = '{ number }'
             """
 
       connection_object = connection_pool.get_connection()
