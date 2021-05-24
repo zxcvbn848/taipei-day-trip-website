@@ -23,7 +23,6 @@ def closePool(connection_object, taipeiCursor):
    if connection_object.is_connected():
       taipeiCursor.close()
       connection_object.close()
-      print("MySQL connection is closed")
 # ====================
 # for /api/attraction
 def selectAttractions(**kwargs):

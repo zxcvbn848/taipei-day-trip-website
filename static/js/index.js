@@ -30,7 +30,7 @@ let indexModels = {
          .then(() => {
                isFetching = false;
             }
-         )
+         );
    }
 };
 
@@ -41,6 +41,7 @@ let indexViews = {
          parent.removeChild(parent.firstChild);
       }
    },
+   // Create attraction links
    createDetermine: function() {
       const dataArray = indexModels.attractionsDataArray;
       const mainElement = document.getElementsByClassName('main')[0];
@@ -121,9 +122,14 @@ let indexControllers = {
       const src = indexModels.srcDetermine(page, keyword);
       if (!src) return;
    
-      indexModels.fetchAPI(src).then(() => {
-         indexViews.createDetermine();
-      });
+      indexModels.fetchAPI(src)
+         .then(() => {
+            indexViews.createDetermine();
+         })
+         .then(() => {
+            indexModels.attractionsDataArray = null;
+         })
+         .catch(error => console.log(error));
    },
    infiniteScroll: function() {
       if (page == null) return;
