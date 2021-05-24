@@ -173,9 +173,7 @@
       width: 100%;
       max-width: 100%;
 
-      margin-left: 10px;
-      margin-right: 10px;
-      padding: 0;
+      padding: 0 10px;
    }
 
 /* booking page */
@@ -233,9 +231,7 @@
       width: 100%;
       max-width: 100%;
 
-      margin-left: 10px;
-      margin-right: 10px;
-      padding: 0;
+      padding: 0 10px;
    }
 
    /* order-attraction */

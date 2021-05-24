@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 
 from flask import request, Blueprint, jsonify, session
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import os
 import json
@@ -53,7 +53,8 @@ def postOrders():
             userIdInOrder = f"00{userId}"
          if userId in range(10, 100):
             userIdInOrder = f"0{userId}"
-         orderNumber = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S") + f"-{userIdInOrder}"
+         tz = timezone(timedelta(hours = +8))
+         orderNumber = datetime.strftime(datetime.now(tz), "%Y%m%d%H%M%S") + f"-{userIdInOrder}"
          
          insertOrder(attractionId = attractionId, userId = userId, phone = contactPhone, number = orderNumber, price = price, date = date, time = time, status = 1)
 
@@ -87,7 +88,7 @@ def postOrders():
          res = response.json()
 
          if res["status"] == 0:
-            updateOrder(number = orderNumber, status = res["status"])
+            updateOrder(orderNumber, status = res["status"])
 
             message = "付款成功"
             orderData = {
