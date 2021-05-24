@@ -1,9 +1,139 @@
-
 // display attractions
 let page = 0;
 
 // Detect Fetching or not
 let isFetching = false;
+
+// indexModels
+let indexModels = {
+   attractionsDataArray: null,
+   srcDetermine: function(page, keyword) {
+      if (page != null && keyword) {
+         return `/api/attractions?page=${page}&keyword=${keyword}`;
+      }
+      if (page != null) {
+         return `/api/attractions?page=${page}`;
+      }
+      return null;
+   },
+   fetchAPI: function(src) {
+      return fetch(src)
+         .then(response => response.json())
+         .then(result => {
+            let attractionDataArray = result.data;
+            let nextPage = result.nextPage;
+            
+            this.attractionsDataArray = attractionDataArray;
+
+            page = nextPage;
+         })
+         .then(() => {
+               isFetching = false;
+            }
+         )
+   }
+};
+
+// indexViews
+let indexViews = {
+   removeAllChildNodes: function(parent) {
+      while (parent.firstChild) {
+         parent.removeChild(parent.firstChild);
+      }
+   },
+   createDetermine: function() {
+      const dataArray = indexModels.attractionsDataArray;
+      const mainElement = document.getElementsByClassName('main')[0];
+
+      if (dataArray == null) {
+         const titleElement = this.createNoResultElement();
+   
+         mainElement.appendChild(titleElement);
+      } else {
+         for (let data of dataArray) {
+            let attractionElement = document.createElement('a');
+            attractionElement.classList.add('attraction');
+            mainElement.appendChild(attractionElement);
+         
+            this.createAPIElement(data, attractionElement);          
+         }
+      } 
+   },
+   createAPIElement: function(data, attractionElement) {
+      let image = data.images[0];
+      let title = data.name;
+      let mrt = data.mrt;
+      if (mrt == null) {
+         mrt = '無';
+      }
+      let category = data.category;
+      let id = data.id;
+   
+      attractionElement.href = `/attraction/${id}`;
+   
+      let attractionImage = document.createElement('div');
+      attractionImage.classList.add('attraction-image');
+      let imgElement = document.createElement('img');
+      imgElement.src = image;
+   
+      attractionImage.appendChild(imgElement);
+      attractionElement.appendChild(attractionImage);
+   
+      let titleElement = document.createElement('div');
+      titleElement.classList.add('title');
+      let titleContent = document.createTextNode(title);
+   
+      titleElement.appendChild(titleContent);
+      attractionElement.appendChild(titleElement);            
+   
+      let mrtElement = document.createElement('div');
+      mrtElement.classList.add('mrt');
+      let mrtContent = document.createTextNode(mrt);
+   
+      mrtElement.appendChild(mrtContent);
+      attractionElement.appendChild(mrtElement);            
+   
+      let categoryElement = document.createElement('div');
+      categoryElement.classList.add('category');
+      let categoryContent = document.createTextNode(category);
+   
+      categoryElement.appendChild(categoryContent);
+      attractionElement.appendChild(categoryElement);    
+   },
+   createNoResultElement: function() {
+      let titleElement = document.createElement('div');
+      titleElement.classList.add('no-result');
+      const noResultConetent = document.createTextNode('沒有結果');
+   
+      titleElement.appendChild(noResultConetent);
+   
+      return titleElement;
+   }
+};
+
+// indexControllers
+let indexControllers = {
+   search: function() {
+      isFetching = true;
+   
+      let keyword = document.getElementsByName('keyword')[0].value;
+   
+      const src = indexModels.srcDetermine(page, keyword);
+      if (!src) return;
+   
+      indexModels.fetchAPI(src).then(() => {
+         indexViews.createDetermine();
+      });
+   },
+   infiniteScroll: function() {
+      if (page == null) return;
+      if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 200)) {
+         if (!isFetching) {
+            indexControllers.search();
+         }
+      }
+   }
+};
 
 // search form
 const searchform = document.getElementById('searchform');
@@ -13,140 +143,17 @@ searchform.addEventListener('submit', e => {
 
    const mainElement = document.getElementsByClassName('main')[0];
 
-   removeAllChildNodes(mainElement);
+   indexViews.removeAllChildNodes(mainElement);
 
    page = 0;
 
-   search();
+   indexControllers.search();
 });
 
-/* 
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('keyup', e => {
-   if (e.code == 'Enter') {
-      e.preventDefault();
-      document.getElementById('searchInput').blur();
-   }
-});
- */
-search();
-
-function search() {
-   isFetching = true;
-
-   let keyword = document.getElementsByName('keyword')[0].value;
-
-   const src = srcDetermine(page, keyword);
-   if (!src) return;
-
-   fetchAPI(src);
-}
-
-function removeAllChildNodes(parent) {
-   while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
-   }
-}   
-
-function srcDetermine(page, keyword) {
-   if (page != null && keyword) {
-      return `/api/attractions?page=${page}&keyword=${keyword}`;
-   }
-   if (page != null) {
-      return `/api/attractions?page=${page}`;
-   }
-   return null;
-}
-
-function fetchAPI(src) {
-   fetch(src)
-      .then(response => response.json())
-      .then(result => {
-         let attractionDataArray = result.data;
-         let nextPage = result.nextPage;
-         
-         const mainElement = document.getElementsByClassName('main')[0];
-
-         createDetermine(attractionDataArray, mainElement);
-         page = nextPage;
-      })
-      .then(() => {
-            isFetching = false;
-         }
-      )
-      .catch(error => console.log(error));
-}
-
-function createDetermine(attractionDataArray, mainElement) {
-   if (attractionDataArray == null) {
-      const titleElement = createNoResultElement();
-
-      mainElement.appendChild(titleElement);
-   } else {
-         for (let attractionData of attractionDataArray) {
-            let attractionElement = document.createElement('a');
-            attractionElement.classList.add('attraction');
-            mainElement.appendChild(attractionElement);
-         
-            createAPIElement(attractionData, attractionElement);          
-         }
-      } 
-}
-
-function createAPIElement(attractionData, attractionElement) {
-   let image = attractionData.images[0];
-   let title = attractionData.name;
-   let mrt = attractionData.mrt;
-   if (mrt == null) {
-      mrt = '無';
-   }
-   let category = attractionData.category;
-   let id = attractionData.id;
-
-   attractionElement.href = `/attraction/${id}`;
-
-   let attractionImage = document.createElement('div');
-   attractionImage.classList.add('attraction-image');
-   let imgElement = document.createElement('img');
-   imgElement.src = image;
-
-   attractionImage.appendChild(imgElement);
-   attractionElement.appendChild(attractionImage);
-
-   let titleElement = document.createElement('div');
-   titleElement.classList.add('title');
-   let titleContent = document.createTextNode(title);
-
-   titleElement.appendChild(titleContent);
-   attractionElement.appendChild(titleElement);            
-
-   let mrtElement = document.createElement('div');
-   mrtElement.classList.add('mrt');
-   let mrtContent = document.createTextNode(mrt);
-
-   mrtElement.appendChild(mrtContent);
-   attractionElement.appendChild(mrtElement);            
-
-   let categoryElement = document.createElement('div');
-   categoryElement.classList.add('category');
-   let categoryContent = document.createTextNode(category);
-
-   categoryElement.appendChild(categoryContent);
-   attractionElement.appendChild(categoryElement);    
-}
-
-function createNoResultElement() {
-   let titleElement = document.createElement('div');
-   titleElement.classList.add('no-result');
-   const noResultConetent = document.createTextNode('沒有結果');
-
-   titleElement.appendChild(noResultConetent);
-
-   return titleElement;
-}
+indexControllers.search();
 
 // Infinite Scroll
-window.addEventListener('scroll', debounce(infiniteScroll));
+window.addEventListener('scroll', debounce(indexControllers.infiniteScroll));
 
 function debounce(func, wait = 100) {
    let timeout;
@@ -159,13 +166,3 @@ function debounce(func, wait = 100) {
       timeout = setTimeout(later, wait);
    };
 }
-
-function infiniteScroll() {
-   if (page == null) return;
-   if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 200)) {
-      if (!isFetching) {
-         search();
-      }
-   }
-}
-
