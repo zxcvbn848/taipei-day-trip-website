@@ -1,3 +1,5 @@
+let username;
+
 /* user name */
 function getUser() {
    const src = '/api/user';
@@ -9,10 +11,8 @@ function getUser() {
          const welcomeElement = document.getElementsByClassName('welcome')[0];
 
          if (userData) {
-            welcomeElement.innerText = `${userData.name}，感謝您的購買！您的訂單資訊如下：`;
-
-            const localStorageData = JSON.parse(window.localStorage.getItem('data'));
-            localStorageDetermine(localStorageData, userData);
+            username = userData.name;
+            welcomeElement.innerText = `${username}，感謝您的購買！您的訂單資訊如下：`;
          } else {
             parent.location.href = '/';
          }
@@ -20,25 +20,26 @@ function getUser() {
       .catch(error => console.log(error));
 }
 
-function localStorageDetermine(localStorageData, userData) {
-   if (!localStorageData) {
-      const welcomeElement = document.getElementsByClassName('welcome')[0];
-      welcomeElement.innerText = `您好，${userData.name}，目前沒有任何行程`;
-
-      const orderInformationElement = document.getElementsByClassName('order-information')[0];
-
-      removeAllChildNodes(orderInformationElement);
-   }
-}
-
 getUser();
 
 function getOrder() {
-   const localStorageData = JSON.parse(window.localStorage.getItem('data'));
+   const url = new URLSearchParams(window.location.search);
+   const orderNumber = url.get('number');
 
-   if (!localStorageData) return;
+   if (!orderNumber || !url) {
+      // parent.location.href = '/';
+      const orderInformationElement = document.getElementsByClassName('order-information')[0];
 
-   const src = `/api/order/${localStorageData.number}`;
+      removeAllChildNodes(orderInformationElement);
+
+      const noResultElement = document.createElement('div');
+      const noResultContent = document.createTextNode('目前沒有任何行程');
+      noResultElement.appendChild(noResultContent);
+      orderInformationElement.appendChild(noResultContent);
+      return;
+   }
+
+   const src = `/api/order/${orderNumber}`;
    fetch(src)
       .then(response => response.json())
       .then(result => {
@@ -51,12 +52,15 @@ function getOrder() {
 
 function createDetermine(orderData) {
    if (orderData == null) {
+      const welcomeElement = document.getElementsByClassName('welcome')[0];
+      welcomeElement.innerText = `${username}，您好：`;
+
       const orderInformationElement = document.getElementsByClassName('order-information')[0];
 
       removeAllChildNodes(orderInformationElement);
 
       const noResultElement = document.createElement('div');
-      const noResultContent = document.createTextNode('目前沒有任何行程');
+      const noResultContent = document.createTextNode('搜尋不到該訂單');
       noResultElement.appendChild(noResultContent);
       orderInformationElement.appendChild(noResultContent);
    } else {
@@ -65,6 +69,7 @@ function createDetermine(orderData) {
 }
 
 function createAPIElement(orderData) {
+   const orderNumberElement = document.getElementsByClassName('order-number')[0];
    const attractionImageElement = document.getElementsByClassName('attraction-image')[0];
    const attractionNameElement = document.getElementsByClassName('name')[0];
    const dateElement = document.getElementsByClassName('date')[0];
@@ -75,6 +80,7 @@ function createAPIElement(orderData) {
    const contactEmailElement = document.getElementsByClassName('contact-email')[0];
    const contactPhoneElement = document.getElementsByClassName('contact-phone')[0];
       
+   const orderNumber = orderData.number;
    const price = orderData.price;
 
    const attractionName = orderData.trip.attraction.name;
@@ -95,6 +101,9 @@ function createAPIElement(orderData) {
    if (time === 'afternoon') {
       actualTime = '下午 2 點到晚上 9 點';
    }
+
+   let orderNumberContent = document.createTextNode(`訂單編號：${orderNumber}`);
+   orderNumberElement.appendChild(orderNumberContent);
 
    let imageElement = document.createElement('img');
    imageElement.src = image;

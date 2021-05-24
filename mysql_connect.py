@@ -296,7 +296,7 @@ def insertOrder(**kwargs):
    finally:
       closePool(connection_object, taipeiCursor)        
 
-def selectOrder(number):
+def selectOrder(number, userId):
    try:
       sql_cmd = f"""
                SELECT 
@@ -306,7 +306,7 @@ def selectOrder(number):
                FROM orders o
                JOIN attractions a ON o.attractionId = a.id
                JOIN users u ON o.userId = u.id
-               WHERE number = '{ number }'
+               WHERE o.number = '{ number }' AND o.userId = { userId }
                """
 
       connection_object = connection_pool.get_connection()
@@ -325,4 +325,33 @@ def selectOrder(number):
       print(e)
       return None
    finally:
-      closePool(connection_object, taipeiCursor)        
+      closePool(connection_object, taipeiCursor) 
+
+def updateOrder(number, **kwargs):
+   try:
+      updateColumnAndValue = ""
+
+      for key in kwargs:
+         if type(kwargs[key]) == str:
+            updateColumnAndValue += f"{ key } = '{ kwargs[key] }', "
+         else: 
+            updateColumnAndValue += f"{ key } = { kwargs[key] }, "
+
+      updateColumnAndValue = updateColumnAndValue[:-2]
+
+      sql_cmd = f"""
+            UPDATE orders 
+            SET { updateColumnAndValue }
+            WHERE number = { number }
+            """
+
+      connection_object = connection_pool.get_connection()
+
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)                
+         connection_object.commit()            
+   except Exception as e:
+      print(e)
+   finally:
+      closePool(connection_object, taipeiCursor)

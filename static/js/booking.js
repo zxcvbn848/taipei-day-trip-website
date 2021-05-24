@@ -338,13 +338,11 @@ function goOrder(prime) {
          const orderData = result.data;
          const orderFailed = result.error;
          
-         if (orderData) {
-            window.localStorage.setItem('data', JSON.stringify(orderData));
-            
+         if (orderData) {            
             refreshOrder();
             
             alert(orderData.payment.message);
-            parent.location.href = '/thankyou';
+            parent.location.href = `/thankyou?number=${orderData.number}`;
          } 
 
          if (orderFailed) {

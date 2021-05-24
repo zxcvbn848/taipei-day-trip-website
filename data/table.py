@@ -26,7 +26,13 @@ webCursor.execute("""
 )
 
 webCursor.execute("""
-   DROP TABLE IF EXISTS bookings
+   ALTER TABLE users 
+   MODIFY email VARCHAR(255) NOT NULL UNIQUE;
+   """
+)
+
+webCursor.execute("""
+   DROP TABLE IF EXISTS bookings;
    """
 )
 
@@ -42,7 +48,7 @@ webCursor.execute("""
    """
 )
 webCursor.execute("""
-   DROP TABLE IF EXISTS orders
+   DROP TABLE IF EXISTS orders;
    """
 )
 
@@ -52,7 +58,7 @@ webCursor.execute("""
       attractionId INT NOT NULL, 
       userId BIGINT NOT NULL, 
       phone VARCHAR(255) NOT NULL,
-      number VARCHAR(255) NOT NULL,
+      number VARCHAR(255) NOT NULL UNIQUE,
       price INT NOT NULL, 
       date DATE NOT NULL, 
       time VARCHAR(255) NOT NULL, 

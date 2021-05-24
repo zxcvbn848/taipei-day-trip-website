@@ -3,11 +3,15 @@ sys.path.append("..")
 
 from flask import request, Blueprint, jsonify, session
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 import json
 import requests
 
-from mysql_connect import insertOrder, selectOrder
+from mysql_connect import insertOrder, selectOrder, updateOrder
  
+load_dotenv()
+
 api_order = Blueprint("api_order", __name__)
 
 @api_order.route("/orders", methods=["POST"])
@@ -45,15 +49,24 @@ def postOrders():
          if not (tripBoolean and attractionBoolean and contactBoolean and userId):
             return jsonify({ "error": True, "message": "訂單建立失敗，輸入不正確或其他原因" })
          
+         orderNumber = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")
+         
+         insertOrder(attractionId = attractionId, userId = userId, phone = contactPhone, number = orderNumber, price = price, date = date, time = time, status = 1)
+
+         insertedOrder = selectOrder(orderNumber, userId)
+
+         if not insertedOrder:
+            return jsonify({ "error": True, "message": "訂單建立失敗，輸入不正確或其他原因" })
+         
          # Deal with prime API
          payByPrime_Url = "https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
          headers = {
             "Content-Type": "application/json",
-            "x-api-key": "partner_s7LVqjIdzBwsPr1CsBueKCIWfeGE8V0G7sWirM0puFmJD27oLSlgnhxU"
+            "x-api-key": os.getenv("PARTNER_KEY")
          }
          tappayRequest = json.dumps({
             "prime": prime,
-            "partner_key": "partner_s7LVqjIdzBwsPr1CsBueKCIWfeGE8V0G7sWirM0puFmJD27oLSlgnhxU",
+            "partner_key": os.getenv("PARTNER_KEY"),
             "merchant_id": "zxcvbn848_ESUN",
             "details": "Tappay test",
             "amount": price,
@@ -69,28 +82,28 @@ def postOrders():
          response = requests.post(payByPrime_Url, data = tappayRequest, headers = headers, timeout = 30)
          res = response.json()
 
-         message = ""
          if res["status"] == 0:
-            insertOrder(attractionId = attractionId, userId = userId, phone = contactPhone, number = res["rec_trade_id"], price = price, date = date, time = time, status = res["status"])
+            updateOrder(number = orderNumber, status = res["status"])
 
-            createdOrder = selectOrder(res["rec_trade_id"])
-
-            if createdOrder:
-               message = "付款成功"
-               orderData = {
-                  "number": createdOrder["number"],
-                  "payment": {
-                     "status": res["status"],
-                     "message": message
-                  }
+            message = "付款成功"
+            orderData = {
+               "number": insertedOrder["number"],
+               "payment": {
+                  "status": insertedOrder["status"],
+                  "message": message
                }
-               return jsonify({ "data": orderData })
-            else:
-               message = "訂單建立失敗，輸入不正確或其他原因"
-               return jsonify({ "error": True, "message": message })
+            }
+            return jsonify({ "data": orderData })
          else:
-            message = "訂單建立失敗，輸入不正確或其他原因"
-            return jsonify({ "error": True, "message": message })
+            message = "付款失敗"
+            orderData = {
+               "number": insertedOrder["number"],
+               "payment": {
+                  "status": insertedOrder["status"],
+                  "message": message
+               }
+            }
+            return jsonify({ "data": orderData })
       else:
          return jsonify({ "error": True, "message": "請先登入" })
    except Exception as e:
@@ -101,7 +114,8 @@ def postOrders():
 def getOrder(number):
    try:
       if "user" in session:
-         selectedOrder = selectOrder(number)
+         userId = session["user"]["id"]
+         selectedOrder = selectOrder(number, userId)
 
          if selectedOrder:
             orderData = {

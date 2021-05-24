@@ -17,7 +17,6 @@
 
    width: var(--content-width);
    max-width: 90%;
-   /* min-height: 72.2vh; */
 
    color: #666666;
 }
@@ -38,6 +37,19 @@
    width: var(--content-width);
    max-width: 90%;
    min-height: 65vh;
+}
+
+.order-information .order-number {
+   font-family: Noto Sans TC;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 16px;
+   line-height: 13px;
+   
+   display: flex;
+   align-items: center;
+
+   color: #666666;
 }
 
 .order-information .order-attraction {
