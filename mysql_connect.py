@@ -362,7 +362,7 @@ def selectOrders(userId):
                SELECT o.number, o.attractionId, a.name AS attr_name
                FROM orders o
                JOIN attractions a ON o.attractionId = a.id
-               WHERE o.userId = { userId }
+               WHERE o.userId = { userId } AND o.status = 0
                """
 
       connection_object = connection_pool.get_connection()
