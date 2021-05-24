@@ -55,6 +55,24 @@ function createDetermine(orderData) {
       const noResultContent = document.createTextNode('搜尋不到該訂單');
       noResultElement.appendChild(noResultContent);
       orderInformationElement.appendChild(noResultContent);
+
+      return;
+   } else if (orderData.status === 1) {
+      const welcomeElement = document.getElementsByClassName('welcome')[0];
+      welcomeElement.innerText = `${username}，您好：`;
+
+      const orderInformationElement = document.getElementsByClassName('order-information')[0];
+
+      removeAllChildNodes(orderInformationElement);
+
+      const orderNumberElement = document.createElement('div');
+      orderNumberElement.classList.add('order-number');
+      const orderNumber = orderData.number;
+
+      let orderNumberContent = document.createTextNode(`訂單編號：${orderNumber} (付款失敗)`);
+      orderNumberElement.appendChild(orderNumberContent);   
+      orderInformationElement.appendChild(orderNumberElement);
+      return;
    } else {
       createAPIElement(orderData);
    }

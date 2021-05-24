@@ -339,16 +339,13 @@ function goOrder(prime) {
          const orderData = result.data;
          const orderFailed = result.error;
          
-         if (orderData.payment.status === 0) {            
+         if (orderData) {            
             refreshOrder();
             
             alert(orderData.payment.message);
             parent.location.href = `/thankyou?number=${orderData.number}`;
 
             return;
-         } else {
-            alert(orderData.payment.message);
-            location.reload();
          }
 
          if (orderFailed) {

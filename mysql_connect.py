@@ -359,10 +359,10 @@ def selectOrders(userId):
    orderDataList = []
    try:
       sql_cmd = f"""
-               SELECT o.number, o.attractionId, a.name AS attr_name
+               SELECT o.number, o.attractionId, o.status, a.name AS attr_name
                FROM orders o
                JOIN attractions a ON o.attractionId = a.id
-               WHERE o.userId = { userId } AND o.status = 0
+               WHERE o.userId = { userId }
                """
 
       connection_object = connection_pool.get_connection()
