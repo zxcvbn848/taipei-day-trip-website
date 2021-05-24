@@ -32,6 +32,8 @@ openModalButtons.forEach(button => {
    // button.dataset.modalTarget = data-modal-target in HTML <button>
       const modal = document.querySelector(button.dataset.modalTarget); 
       openModal(modal);
+
+      toggleNavbarList();
    });
 });
 

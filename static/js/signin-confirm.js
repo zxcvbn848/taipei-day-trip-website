@@ -57,6 +57,8 @@ function goBookingDetermine(userData) {
          const modal = document.querySelector(button.dataset.modalTarget); 
          openModal(modal);
       });
+
+      toggleNavbarList();
    }
 }
 

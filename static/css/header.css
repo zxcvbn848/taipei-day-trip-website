@@ -160,7 +160,7 @@
 	transition: 200ms ease-in-out;
 	border: 1px ridge white;
 	border-radius: 7px;
-	z-index: 10;
+	z-index: 15;
 	width: 340px;
 	height: 275px;
 	max-width: 95%;
