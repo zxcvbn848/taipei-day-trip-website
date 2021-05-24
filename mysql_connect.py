@@ -355,3 +355,33 @@ def updateOrder(number, **kwargs):
       print(e)
    finally:
       closePool(connection_object, taipeiCursor)
+
+def selectOrders(userId):
+   orderDataList = []
+   try:
+      sql_cmd = f"""
+               SELECT o.number, o.attractionId, a.name AS attr_name
+               FROM orders o
+               JOIN attractions a ON o.attractionId = a.id
+               WHERE o.userId = { userId }
+               """
+
+      connection_object = connection_pool.get_connection()
+
+      if connection_object.is_connected():
+         taipeiCursor = connection_object.cursor()
+         taipeiCursor.execute(sql_cmd)                
+         taipeiResults = taipeiCursor.fetchall()
+
+      if taipeiResults:
+         for taipeiResult in taipeiResults:
+            orderData = dict(zip(taipeiCursor.column_names, taipeiResult))
+            orderDataList.append(orderData)
+         return orderDataList
+      else:
+         return None
+   except Exception as e:
+      print(e)
+      return None
+   finally:
+      closePool(connection_object, taipeiCursor)

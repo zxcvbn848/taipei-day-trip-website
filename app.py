@@ -34,6 +34,11 @@ def booking():
 def thankyou():
 	return render_template("thankyou.html")
 
+# Andy's Page
+@app.route("/member")
+def order():
+	return render_template("member.html")
+
 if __name__ == "__main__":
 	# debug 記得關掉
 	app.run(host="0.0.0.0", port=3000, debug=True)

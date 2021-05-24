@@ -8,7 +8,7 @@ import os
 import json
 import requests
 
-from mysql_connect import insertOrder, selectOrder, updateOrder
+from mysql_connect import insertOrder, selectOrder, updateOrder, selectOrders
  
 load_dotenv()
 
@@ -49,7 +49,11 @@ def postOrders():
          if not (tripBoolean and attractionBoolean and contactBoolean and userId):
             return jsonify({ "error": True, "message": "訂單建立失敗，輸入不正確或其他原因" })
          
-         orderNumber = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")
+         if userId in range(1, 10):
+            userIdInOrder = f"00{userId}"
+         if userId in range(10, 100):
+            userIdInOrder = f"0{userId}"
+         orderNumber = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S") + f"-{userIdInOrder}"
          
          insertOrder(attractionId = attractionId, userId = userId, phone = contactPhone, number = orderNumber, price = price, date = date, time = time, status = 1)
 
@@ -147,3 +151,20 @@ def getOrder(number):
       print(e)
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })
 
+# Andy's api
+@api_order.route("/orders", methods=["GET"])
+def getOrders():
+   try:
+      if "user" in session:
+         userId = session["user"]["id"]
+         orderDataList = selectOrders(userId)
+
+         if orderDataList:
+            return jsonify({ "data": orderDataList })
+         else:
+            return jsonify({ "data": None })
+      else:
+         return jsonify({ "error": True, "message": "請先登入" })
+   except Exception as e:
+      print(e)
+      return jsonify({ "error": True, "message": "伺服器內部錯誤" })

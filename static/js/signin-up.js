@@ -1,3 +1,23 @@
+// For navbar toggle button
+const toggleButton = document.getElementsByClassName('toggle-button')[0];
+const navbarLinks = document.getElementsByClassName('navbar-links')[0];
+
+const overlayForNavbar = document.getElementById('overlay-for-navbar');
+
+function toggleNavbarList() {
+   navbarLinks.classList.toggle('active');
+   overlayForNavbar.classList.toggle('active');
+}
+
+toggleButton.addEventListener('click', e => {
+   e.preventDefault();
+
+   toggleNavbarList();
+});
+
+overlayForNavbar.addEventListener('click', () => {
+   toggleNavbarList();
+});
 
 // For Popup
 const openModalButtons = document.querySelectorAll('[data-modal-target]');

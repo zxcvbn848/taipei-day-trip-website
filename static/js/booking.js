@@ -82,9 +82,10 @@ function createDetermine(bookingData) {
       removeAllChildNodes(bookingElement);
 
       const noResultElement = document.createElement('div');
+      noResultElement.classList.add('no-result');
       const noResultContent = document.createTextNode('目前沒有任何待預訂的行程');
       noResultElement.appendChild(noResultContent);
-      bookingElement.appendChild(noResultContent);
+      bookingElement.appendChild(noResultElement);
    } else {
       createAPIElement(bookingData);
    }

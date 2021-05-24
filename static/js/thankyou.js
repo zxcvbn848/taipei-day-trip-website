@@ -27,15 +27,7 @@ function getOrder() {
    const orderNumber = url.get('number');
 
    if (!orderNumber || !url) {
-      // parent.location.href = '/';
-      const orderInformationElement = document.getElementsByClassName('order-information')[0];
-
-      removeAllChildNodes(orderInformationElement);
-
-      const noResultElement = document.createElement('div');
-      const noResultContent = document.createTextNode('目前沒有任何行程');
-      noResultElement.appendChild(noResultContent);
-      orderInformationElement.appendChild(noResultContent);
+      parent.location.href = '/';
       return;
    }
 

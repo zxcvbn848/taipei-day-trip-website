@@ -358,7 +358,8 @@
 }
 
 /* overlay */
-#overlay {
+#overlay,
+#overlay-for-navbar {
 	position: fixed;
 	opacity: 0;
 	transition: 200ms ease-in-out;
@@ -370,7 +371,8 @@
 	pointer-events: none;
 }
 
-#overlay.active {
+#overlay.active,
+#overlay-for-navbar.active {
 	opacity: 1;
 	pointer-events: all;
    z-index: 8;

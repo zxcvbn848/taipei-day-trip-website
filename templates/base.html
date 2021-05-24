@@ -18,8 +18,14 @@
    <div class="nav">
       <nav class="navbar">
          <div class="title"><a href="/">台北一日遊</a></div>
+         <a href="#" class="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+         </a>
          <div class="navbar-links">
             <ul>
+               <li><a href="/member" target="_self" id="member-link" class="hidden">會員頁面</a></li>
                <li><a href="/booking" target="_self" id="booking-link">預定行程</a></li>
                <li><button id="signinButton" data-modal-target="#modalSignin">登入/註冊</button></li>
                <li><button id="signoutButton" class="hidden">登出系統</button></li>
@@ -60,6 +66,7 @@
 		</div>
 	</div>
 	<div id="overlay"></div>
+	<div id="overlay-for-navbar"></div>
 
    <footer class="footer">
       <div class="text">COPYRIGHT © 2021 台北一日遊</div>

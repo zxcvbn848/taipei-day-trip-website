@@ -1,5 +1,6 @@
 const signinButton = document.getElementById('signinButton');
 const signoutButton = document.getElementById('signoutButton');
+const memberLink = document.getElementById('member-link');
 
 /* singin confirm */
 function signinConfirm() {
@@ -17,9 +18,11 @@ function signinDetermine(userData) {
    if (userData) {
       signinButton.classList.add('hidden');
       signoutButton.classList.remove('hidden');
+      memberLink.classList.remove('hidden');
    } else {
       signinButton.classList.remove('hidden');
       signoutButton.classList.add('hidden');
+      memberLink.classList.add('hidden');
    }
 }
 

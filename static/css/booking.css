@@ -39,6 +39,15 @@
    min-height: 65vh;
 }
 
+.booking .no-result {
+   font-family: Noto Sans TC;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 16px;
+
+   color: #666666;
+}
+
 /* booking-attraction */
 .booking .booking-attraction {
    display: flex; flex-direction: row; 
