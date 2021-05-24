@@ -8,11 +8,10 @@ function getUser() {
       .then(result => {
          const userData = result.data;
 
-         const welcomeElement = document.getElementsByClassName('welcome')[0];
-
          if (userData) {
             username = userData.name;
-            welcomeElement.innerText = `${username}，感謝您的購買！您的訂單資訊如下：`;
+
+            getOrder();
          } else {
             parent.location.href = '/';
          }
@@ -69,8 +68,15 @@ function createDetermine(orderData) {
       orderNumberElement.classList.add('order-number');
       const orderNumber = orderData.number;
 
-      let orderNumberContent = document.createTextNode(`訂單編號：${orderNumber} (付款失敗)`);
-      orderNumberElement.appendChild(orderNumberContent);   
+      const paymentElment = document.createElement('span');
+
+      const paymentMessage = `(付款失敗)`;
+      paymentElment.innerText = paymentMessage;
+      paymentElment.style.color = '#FF9224';
+
+      const orderNumberContent = document.createTextNode(`訂單編號：${orderNumber}`);
+      orderNumberElement.appendChild(orderNumberContent);
+      orderNumberElement.appendChild(paymentElment);
       orderInformationElement.appendChild(orderNumberElement);
       return;
    } else {
@@ -79,6 +85,9 @@ function createDetermine(orderData) {
 }
 
 function createAPIElement(orderData) {
+   const welcomeElement = document.getElementsByClassName('welcome')[0];
+   welcomeElement.innerText = `${username}，感謝您的購買！您的訂單資訊如下：`;
+
    const orderNumberElement = document.getElementsByClassName('order-number')[0];
    const attractionImageElement = document.getElementsByClassName('attraction-image')[0];
    const attractionNameElement = document.getElementsByClassName('name')[0];
@@ -149,5 +158,3 @@ function removeAllChildNodes(parent) {
       parent.removeChild(parent.firstChild);
    }
 }
-
-getOrder();

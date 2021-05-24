@@ -74,9 +74,25 @@ function createOrdersDetermine(orderDataArray) {
 function createAPIElement(orderData, orderAElement) {
    const orderNumber = orderData.number;
    const attractionName = orderData.attr_name;
+   const paymentStatus = orderData.status;
+
+   const paymentElment = document.createElement('span');
+
+   let paymentMessage;
+   if (paymentStatus === 0) {
+      paymentMessage = '付款成功';
+      paymentElment.style.color = '#00A600';
+   }
+   if (paymentStatus === 1) {
+      paymentMessage = '付款失敗';
+      paymentElment.style.color = '#FF9224';
+   }
+
+   paymentElment.innerText = `(${paymentMessage})`;
 
    const orderContent = document.createTextNode(`${attractionName} (${orderNumber})`);
    orderAElement.appendChild(orderContent);
+   orderAElement.appendChild(paymentElment);
    
    orderAElement.href = `/thankyou?number=${orderNumber}`;
 }
