@@ -90,6 +90,8 @@ def postOrders():
          if res["status"] == 0:
             updateOrder(orderNumber, status = res["status"])
 
+            insertedOrder = selectOrder(orderNumber, userId)
+
             message = "付款成功"
             orderData = {
                "number": insertedOrder["number"],

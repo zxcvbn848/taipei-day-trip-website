@@ -344,6 +344,8 @@ function goOrder(prime) {
             
             alert(orderData.payment.message);
             parent.location.href = `/thankyou?number=${orderData.number}`;
+
+            return;
          } else {
             alert(orderData.payment.message);
             location.reload();
