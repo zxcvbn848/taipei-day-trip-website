@@ -26,31 +26,45 @@ webCursor.execute("""
 )
 
 webCursor.execute("""
+   ALTER TABLE users 
+   MODIFY email VARCHAR(255) NOT NULL UNIQUE;
+   """
+)
+
+webCursor.execute("""
+   DROP TABLE IF EXISTS bookings;
+   """
+)
+
+webCursor.execute("""
    CREATE TABLE IF NOT EXISTS bookings(
       id BIGINT NOT NULL AUTO_INCREMENT, 
       attractionId INT NOT NULL, 
-      userId BIGINT NOT NULL, 
+      userId BIGINT NOT NULL UNIQUE, 
       date DATE NOT NULL, 
       time VARCHAR(255) NOT NULL, 
       price INT NOT NULL, 
       PRIMARY KEY(id)) charset=utf8;
    """
 )
+webCursor.execute("""
+   DROP TABLE IF EXISTS orders;
+   """
+)
 
-# webCursor.execute("""
-#    CREATE TABLE IF NOT EXISTS orders(
-#       id BIGINT NOT NULL AUTO_INCREMENT, 
-#       number VARCHAR(255) NOT NULL,
-#       prime VARCHAR(255) NOT NULL,
-#       price INT NOT NULL, 
-#       attractionId INT NOT NULL, 
-#       userId BIGINT NOT NULL, 
-#       date DATE NOT NULL, 
-#       time VARCHAR(255) NOT NULL, 
-#       phone VARCHAR(255) NOT NULL,
-#       status INT NOT NULL,
-#       PRIMARY KEY(id)) charset=utf8;
-#    """
-# )
+webCursor.execute("""
+   CREATE TABLE IF NOT EXISTS orders(
+      id BIGINT NOT NULL AUTO_INCREMENT, 
+      attractionId INT NOT NULL, 
+      userId BIGINT NOT NULL, 
+      phone VARCHAR(255) NOT NULL,
+      number VARCHAR(255) NOT NULL UNIQUE,
+      price INT NOT NULL, 
+      date DATE NOT NULL, 
+      time VARCHAR(255) NOT NULL, 
+      status INT NOT NULL,
+      PRIMARY KEY(id)) charset=utf8;
+   """
+)
 
 websiteDB.commit()

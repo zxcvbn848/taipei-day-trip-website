@@ -1,4 +1,9 @@
 @media (max-width: 1200px) {
+/* index page */
+   .navbar .title {
+      margin-left: 10px;
+   }
+
    .main {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -37,7 +42,7 @@
       max-height: 100%;
    }
 
-   /* attraction page */
+/* attraction page */
    .attraction-introduction {
       width: 95%;
       height: auto;
@@ -82,14 +87,19 @@
 }
 
 @media (max-width: 1100px) {
-   /* booking page */
+/* booking page */
    .booking .booking-attraction .information .detail {
+      grid-template-columns: 50px 250px;
+   }
+
+/* thankyou page */
+   .order-information .order-attraction .information .detail {
       grid-template-columns: 50px 250px;
    }
 }
 
 @media (max-width: 950px) {
-   /* attraction page */
+/* attraction page */
    .attraction-introduction {
       display: flex; flex-direction: column;
       gap: 20px;
@@ -146,30 +156,36 @@
       bottom: 5%;
    }
 
-   /* booking page */
+/* booking page */
    .booking .booking-attraction .information .detail {
+      grid-template-columns: 50px 350px;
+   }   
+
+/* order page */
+   .order-information .order-attraction .information .detail {
       grid-template-columns: 50px 350px;
    }   
 }
 
 @media (max-width: 900px) {
-   /* booking page */
+/* booking page (including thankyou page) */
    .welcome {
       width: 100%;
       max-width: 100%;
 
-      margin-left: 10px;
-      margin-right: 10px;
-      padding: 0;
+      padding: 0 10px;
    }
 
+/* booking page */
    .booking {
       width: 100%;
       max-width: 100%;
 
-      margin-left: 10px;
-      margin-right: 10px;
       padding: 0;
+   }
+
+   .booking .no-result {
+      margin-left: 10px;
    }
 
    /* booking-attraction */
@@ -203,6 +219,53 @@
       padding: 0px 10px;
    }
 
+/* thankyou page */
+   .order-information {
+      width: 100%;
+      max-width: 100%;
+
+      padding: 0;
+   }
+
+   .order-information .order-number {
+      width: 100%;
+      max-width: 100%;
+
+      padding: 0 10px;
+   }
+
+   /* order-attraction */
+   .order-information .order-attraction {
+      display: flex; flex-direction: column;
+      position: relative;
+      gap: 7px;
+   }
+
+   .order-information .order-attraction .attraction-image {
+      width: 100%;
+      height: auto;
+   
+      border-radius: 5px;
+   }
+
+   /* user data */
+   .order-information .user-data {
+      padding: 0px 10px;      
+   }
+
+/* member page */
+   .orders-list {
+      width: 100%;
+      max-width: 100%;
+
+      padding: 0;
+   }
+
+   .orders-list .no-result {
+      margin-left: 10px;
+   }
+
+/* for all hr */
    hr {
       position: relative;
       right: 0;
@@ -213,6 +276,61 @@
 }
 
 @media (max-width: 600px) {
+/* index page */
+   /* navbar & toggle button */
+   .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+   }
+
+   .navbar .title,
+   .navbar .toggle-button {
+      margin-left: 10px;
+      margin-top: 10px;
+   }
+   
+   .navbar .toggle-button {
+      display: flex;
+   }
+
+   .navbar .navbar-links {
+      display: none;
+      width: 100%;
+   }
+   
+   .navbar .navbar-links ul {
+      width: 100%;
+      flex-direction: column;
+   }
+   
+   .navbar .navbar-links ul li {
+      text-align: center;
+      width: 100%;
+   }
+
+   .navbar .navbar-links ul li a,
+   .navbar .navbar-links ul li button {
+      text-align: center;
+      width: 100%;
+   }
+
+   .navbar .navbar-links.active {
+      display: flex;
+
+      position: absolute;
+      top: 54px;
+
+      width: 100%;
+
+      margin: 0;
+      padding: 0;
+      
+      height: auto;
+
+      background-color: #FFFFFF;
+   }
+
+   /* header */
    .header {
       height: 280px;
       overflow: hidden;
@@ -263,7 +381,7 @@
       max-width: 100%; 
       grid-template-columns: minmax(auto, 310px);
    }
-
+   /* main */
    .main {
       display: grid;
       grid-template-columns: 1fr;
@@ -295,8 +413,13 @@
       padding: 0px 10px;
    } 
 
-   /* booking page */
+/* booking page */
    .booking .booking-attraction .information .detail {
+      grid-template-columns: 50px 250px;
+   }
+
+/* thankyou page */
+   .order-information .order-attraction .information .detail {
       grid-template-columns: 50px 250px;
    }
 }

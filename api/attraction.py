@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")
 
 from flask import request, Blueprint, jsonify
+
 from mysql_connect import selectAttractions, selectAttraction
  
 api_attraction = Blueprint('api_attraction', __name__)

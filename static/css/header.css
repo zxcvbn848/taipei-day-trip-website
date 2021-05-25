@@ -160,7 +160,7 @@
 	transition: 200ms ease-in-out;
 	border: 1px ridge white;
 	border-radius: 7px;
-	z-index: 10;
+	z-index: 15;
 	width: 340px;
 	height: 275px;
 	max-width: 95%;
@@ -358,7 +358,8 @@
 }
 
 /* overlay */
-#overlay {
+#overlay,
+#overlay-for-navbar {
 	position: fixed;
 	opacity: 0;
 	transition: 200ms ease-in-out;
@@ -370,7 +371,8 @@
 	pointer-events: none;
 }
 
-#overlay.active {
+#overlay.active,
+#overlay-for-navbar.active {
 	opacity: 1;
 	pointer-events: all;
    z-index: 8;

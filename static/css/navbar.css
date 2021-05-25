@@ -34,14 +34,14 @@ html, body {
 
    position: fixed;
    width: var(--window-width);
-   max-width: 100vw;
+   max-width: 100%;
    height: 54px;
    top: 0px;
 
-   padding: 10px 10px;
+   padding: 0;
 
    background: #FFFFFF;
-   z-index: 5;
+   z-index: 11;
 }
 
 .navbar {
@@ -50,15 +50,12 @@ html, body {
    position: relative;
    width: var(--content-width);
    max-width: var(--max-width);
-
-   /* padding-right: 10px; */
 }
 
 .navbar .title {
    position: relative;
    width: 150px;
    height: 34px;
-
 }
 
 .navbar .title a {
@@ -78,6 +75,28 @@ html, body {
    color: #448899;
 }
 
+/* .toggle-button */
+.navbar .toggle-button {
+   position: absolute;
+   top: .5rem;
+   right: 1rem;
+
+   width: 30px;
+   height: 21px;
+
+   display: none;
+   flex-direction: column;
+   justify-content: space-between;
+}
+
+.navbar .toggle-button .bar {
+   height: 3px;
+   width: 100%;
+   background-color: black;
+   border-radius: 10px;
+}
+
+/* Links & Buttons */
 .navbar-links {
    display: flex;
    align-items: center;
@@ -85,9 +104,6 @@ html, body {
    height: 100%;
 
    color: #666666;
-   /* flex: none;
-   order: 0;
-   flex-grow: 0; */
 }
 
 .navbar-links ul {
@@ -125,6 +141,7 @@ html, body {
    cursor: pointer;
 }
 
+.navbar-links li a.hidden,
 .navbar-links li button.hidden {
    display: none;
 }

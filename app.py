@@ -1,8 +1,6 @@
-from flask import Flask, Blueprint, render_template, session
+from flask import Flask, render_template
 from datetime import timedelta
 import os
-
-from mysql_connect import selectAttractions, selectAttraction
 
 from api.attraction import api_attraction
 from api.user import api_user
@@ -35,6 +33,11 @@ def booking():
 @app.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
+
+# Andy's Page
+@app.route("/member")
+def order():
+	return render_template("member.html")
 
 if __name__ == "__main__":
 	# debug 記得關掉

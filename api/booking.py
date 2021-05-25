@@ -5,9 +5,9 @@ from flask import request, Blueprint, jsonify, session
 from datetime import datetime
 import json
 
-from mysql_connect import selectBooking, insertBooking, deleteBookingData
+from mysql_connect import selectBooking, insertBooking, updateBooking, deleteBookingData
  
-api_booking = Blueprint("api_booking", __name__)
+api_booking = Blueprint("api_booking", __name__) 
 
 @api_booking.route("/booking", methods=["GET"])
 def getBooking():
@@ -16,30 +16,30 @@ def getBooking():
          userId = int(session["user"]["id"])
 
          selectedBooking = selectBooking(userId = userId)
-
-         date = datetime.strftime(selectedBooking["date"], "%Y-%m-%d")
-
-         data = {
-            "attraction": {
-               "id": selectedBooking["id"],
-               "name": selectedBooking["name"],
-               "address": selectedBooking["address"],
-               "image": json.loads(selectedBooking["images"])[0]
-            },
-            "date": date,
-            "time": selectedBooking["time"],
-            "price": selectedBooking["price"],
-         }
-         if data:
+         
+         if selectedBooking:
+            data = {
+               "attraction": {
+                  "id": selectedBooking["id"],
+                  "name": selectedBooking["name"],
+                  "address": selectedBooking["address"],
+                  "image": json.loads(selectedBooking["images"])[0]
+               },
+               "date": datetime.strftime(selectedBooking["date"], "%Y-%m-%d"),
+               "time": selectedBooking["time"],
+               "price": selectedBooking["price"],
+            }
             return jsonify({ "data": data })
          else:
             return jsonify({ "data": None })
+      else:
+         return jsonify({ "error": True, "message": "請先登入" })            
    except Exception as e:
       print(e)
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })
       
 @api_booking.route("/booking", methods=["POST"])
-def postBooking():
+def postBooking(): 
    try:
       if "user" in session:
          attractionId = int(request.get_json()["attrationId"])
@@ -50,8 +50,13 @@ def postBooking():
 
          if not (attractionId and date and time and price and userId):
             return jsonify({ "error": True, "message": "建立失敗，輸入不正確或其他原因" })
+         
+         originBooking = selectBooking(userId = userId)
 
-         insertBooking(attractionId = attractionId, date = date, time = time, price = price, userId = userId)
+         if originBooking:
+            updateBooking(userId, attractionId = attractionId, date = date, time = time, price = price)
+         else:
+            insertBooking(attractionId = attractionId, date = date, time = time, price = price, userId = userId)
          
          return jsonify({ "ok": True })
       else:
@@ -77,4 +82,3 @@ def deleteBooking():
    except Exception as e:
       print(e)
       return jsonify({ "error": True, "message": "伺服器內部錯誤" })
-

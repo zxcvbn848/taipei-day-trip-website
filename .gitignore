@@ -140,8 +140,8 @@ cython_debug/
 # Andy's gitignore
 *.txt
 test.py
-panigation.js
-panigation.html
-panigation.css
-signin-up-cookie.js
-signin-confirm-cookie.js
+panigation.*
+*-cookie.js
+booking(old).html
+/oldApi
+*-localStorage.js
