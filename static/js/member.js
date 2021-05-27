@@ -98,8 +98,8 @@ let memberViews = {
 };
 
 let memberControllers = {
-   init: function() {
-      this.showUserData();
+   init: async function() {
+      await this.showUserData();
       this.showOrders();
    },
    showUserData: function() {

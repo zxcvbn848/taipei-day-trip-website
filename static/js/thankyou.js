@@ -159,8 +159,8 @@ let thankyouViews = {
 
 // thankyouControllers
 let thankyouControllers = {
-   init: function() {
-      thankyouModels.fetchGetUserAPI()
+   init: async function() {
+      await thankyouModels.fetchGetUserAPI()
          .then(() => thankyouModels.userData = null);
 
       thankyouModels.fetchGetOrderAPI()
