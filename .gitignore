@@ -145,3 +145,4 @@ panigation.*
 booking(old).html
 /oldApi
 *-localStorage.js
+booking(no-async).js

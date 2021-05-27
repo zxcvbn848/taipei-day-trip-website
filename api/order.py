@@ -54,7 +54,7 @@ def postOrders():
          if userId in range(10, 100):
             userIdInOrder = f"0{userId}"
          tz = timezone(timedelta(hours = +8))
-         orderNumber = datetime.strftime(datetime.now(tz), "%Y%m%d%H%M%S") + f"-{userIdInOrder}"
+         orderNumber = f"{userIdInOrder}-" + datetime.strftime(datetime.now(tz), "%Y%m%d%H%M%S")
          
          insertOrder(attractionId = attractionId, userId = userId, phone = contactPhone, number = orderNumber, price = price, date = date, time = time, status = 1)
 

@@ -271,6 +271,7 @@ section {
    
    width: var(--content-width);
    max-width: 90%;
+   min-height: 22.8vh;
 
    margin: 50px auto 55px;
 

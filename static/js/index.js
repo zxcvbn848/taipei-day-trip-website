@@ -8,12 +8,8 @@ let isFetching = false;
 let indexModels = {
    attractionsDataArray: null,
    srcDetermine: function(page, keyword) {
-      if (page != null && keyword) {
-         return `/api/attractions?page=${page}&keyword=${keyword}`;
-      }
-      if (page != null) {
-         return `/api/attractions?page=${page}`;
-      }
+      if (page != null && keyword) return `/api/attractions?page=${page}&keyword=${keyword}`;
+      if (page != null) return `/api/attractions?page=${page}`;
       return null;
    },
    fetchAPI: function(src) {
@@ -27,10 +23,7 @@ let indexModels = {
 
             page = nextPage;
          })
-         .then(() => {
-               isFetching = false;
-            }
-         );
+         .then(() => isFetching = false);
    }
 };
 
@@ -63,10 +56,10 @@ let indexViews = {
    createAPIElement: function(data, attractionElement) {
       let image = data.images[0];
       let title = data.name;
+      
       let mrt = data.mrt;
-      if (mrt == null) {
-         mrt = '無';
-      }
+      if (mrt == null) mrt = '無';
+
       let category = data.category;
       let id = data.id;
    
@@ -123,20 +116,14 @@ let indexControllers = {
       if (!src) return;
    
       indexModels.fetchAPI(src)
-         .then(() => {
-            indexViews.createDetermine();
-         })
-         .then(() => {
-            indexModels.attractionsDataArray = null;
-         })
+         .then(() => indexViews.createDetermine())
+         .then(() => indexModels.attractionsDataArray = null)
          .catch(error => console.log(error));
    },
    infiniteScroll: function() {
       if (page == null) return;
       if (window.scrollY + window.innerHeight >= (document.body.scrollHeight - 200)) {
-         if (!isFetching) {
-            indexControllers.search();
-         }
+         if (!isFetching) indexControllers.search();
       }
    }
 };

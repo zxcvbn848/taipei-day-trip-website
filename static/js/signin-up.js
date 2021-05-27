@@ -16,6 +16,7 @@ const overlay = document.getElementById('overlay');
 let signinUpModels = {
    signinState: null,
    signupState: null,
+   signoutState: null,
    fetchPatchUserAPI: function() {
       const emailElememt = document.getElementById('signinEmail');
       const passwordElement = document.getElementById('signinPassword');
@@ -32,9 +33,7 @@ let signinUpModels = {
             })
          })
          .then(response => response.json())
-         .then(result => {
-            this.signinState = result;
-         });
+         .then(result => this.signinState = result);
    },
    fetchPostUserAPI: function() {
       const nameElement = document.getElementById('signupName');
@@ -54,9 +53,16 @@ let signinUpModels = {
             })
          })
          .then(response => response.json())
-         .then(result => {
-            this.signupState = result;
-         });
+         .then(result => this.signupState = result);
+   },
+   // Signout
+   fetchDeleteUserAPI: function() {
+      const src = '/api/user';
+      return fetch(src, {
+            method: 'DELETE'
+         })
+         .then(response => response.json())
+         .then(result => this.signoutState = result);
    }
 };
 
@@ -67,12 +73,12 @@ let signinUpViews = {
       overlayForNavbar.classList.toggle('active');
    },
    openModal: function(modal) {
-      if (modal == null) return
+      if (modal == null) return;
       modal.classList.add('active');
       overlay.classList.add('active');
    },
    closeModal: function(modal) {
-      if (modal == null) return
+      if (modal == null) return;
       modal.classList.remove('active');
       overlay.classList.remove('active');
    },
@@ -153,6 +159,14 @@ let signinUpViews = {
          passwordElement.value = '';
          passwordElement.innerText = '';
       }
+   },
+   // Signout 
+   signoutSuccessDetermine: function() {
+      const signoutSuccess = signinUpModels.signoutState['ok'];
+      const signoutFailed = signinUpModels.signoutState['error'];
+
+      if (signoutSuccess) location.reload();
+      if (signoutFailed) alert(result['message']);
    }
 };
 
@@ -196,6 +210,22 @@ let signinUpControllers = {
             signinUpModels.signinState = null;
          })
          .catch(error => console.log(error));
+   },
+   // Signout
+   signoutCheck: function() {
+      const yes = confirm('確定要登出嗎？');
+      
+      if (yes) {
+         signinUpControllers.signout();
+      } else {
+         return;
+      }
+   },
+   signout: function() {
+      signinUpModels.fetchDeleteUserAPI()
+      .then(() => signinUpViews.signoutSuccessDetermine())
+      .then(() => signinUpModels.signoutState = null)
+      .catch(error => console.log(error));
    }
 };
 
@@ -206,9 +236,7 @@ toggleButton.addEventListener('click', e => {
    signinUpViews.toggleNavbarList();
 });
 
-overlayForNavbar.addEventListener('click', () => {
-   signinUpViews.toggleNavbarList();
-});
+overlayForNavbar.addEventListener('click', () => signinUpViews.toggleNavbarList());
 
 // Popup Modal
 openModalButtons.forEach(button => {
@@ -232,9 +260,7 @@ closeModalButtons.forEach(button => {
 
 overlay.addEventListener('click', () => {
    const modals = document.querySelectorAll('.modal.active');
-   modals.forEach(modal => {
-      signinUpViews.closeModal(modal);
-   });
+   modals.forEach(modal => signinUpViews.closeModal(modal));
 });
 
 goSignupButton.addEventListener('click', () => {
@@ -269,44 +295,6 @@ signinForm.addEventListener('submit', e => {
    signinUpControllers.signinCheck();
 });
 
-// TBD
 /* signout */
-function signout() {
-   const yes = confirm('確定要登出嗎？');
 
-   signoutDetermine(yes);
-}
-
-function signoutDetermine(yes) {
-   if (yes) {
-      const src = '/api/user';
-      fetchDeleteUserAPI(src);
-   } else {
-      return;
-   }
-}
-
-function fetchDeleteUserAPI(src) {
-   fetch(src, {
-      method: 'DELETE'
-   })
-      .then(response => response.json())
-      .then(result => {
-         const signoutSuccess = result['ok'];
-         const signoutFailed = result['error'];
-         
-         signoutSuccessDetermine(signoutSuccess, signoutFailed, result);
-      })
-      .catch(err => console.log('錯誤', err));   
-}
-
-function signoutSuccessDetermine(signoutSuccess, signoutFailed, result) {
-   if (signoutSuccess) {
-      location.reload(); 
-   }
-   if (signoutFailed) {
-      alert(result['message']);
-   }
-}
-
-signoutButton.addEventListener('click', signout);
+signoutButton.addEventListener('click', signinUpControllers.signoutCheck);
