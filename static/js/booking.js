@@ -159,6 +159,11 @@ let bookingViews = {
    createDetermine: function() {
       const bookingData = bookingModels.bookingData;
 
+      const bookingElement = document.getElementsByClassName('booking')[0];
+      const spinner = document.getElementsByClassName('spinner')[0];
+
+      bookingElement.removeChild(spinner);
+
       if (bookingData == null) {
          const bookingElement = document.getElementsByClassName('booking')[0];
    
@@ -174,6 +179,9 @@ let bookingViews = {
       }
    },
    createAPIElement: function(bookingData) {
+      const bookingElement = document.getElementsByClassName('booking')[0];
+      for (let i = 0; i < bookingElement.children.length; i++) bookingElement.children[i].classList.remove('hidden');
+
       const id = bookingData.attraction.id;
       const image = bookingData.attraction.image;
       const name = bookingData.attraction.name;
@@ -193,8 +201,17 @@ let bookingViews = {
    
       let imageElement = document.createElement('img');
       imageElement.src = image;
+      const loadingElement = document.createElement('div');
+      loadingElement.innerText = 'Loading...';
+      loadingElement.classList.add('loading');
+
       attractionImageElement.appendChild(imageElement);
+      attractionImageElement.appendChild(loadingElement);
       document.getElementById('attraction-image').value = image;
+
+      imageElement.onload = function() {
+         attractionImageElement.removeChild(loadingElement);
+      }
    
       let nameContent = document.createTextNode(`台北一日遊：${name}`);
       attractionNameElement.appendChild(nameContent);
@@ -218,6 +235,35 @@ let bookingViews = {
       const totalPriceElement = document.getElementsByClassName('total-price')[0];
       totalPriceElement.innerText = `總價：新台幣 ${price} 元`;
       document.getElementById('total-price').value = price;
+   },
+   createLoadingElement: function() {
+      const bookingElement = document.getElementsByClassName('booking')[0];
+      for (let i = 0; i < bookingElement.children.length; i++) bookingElement.children[i].classList.add('hidden');
+
+      const spinner = document.createElement('div');
+      spinner.classList.add('spinner');
+
+      const spinnerText = document.createElement('div');
+      spinnerText.classList.add('spinner-text');
+      spinnerText.innerText = 'Loading';
+
+      const spinnerSectorRed = document.createElement('div');
+      spinnerSectorRed.classList.add('spinner-sector');
+      spinnerSectorRed.classList.add('spinner-sector-red');
+
+      const spinnerSectorBlue = document.createElement('div');
+      spinnerSectorBlue.classList.add('spinner-sector');
+      spinnerSectorBlue.classList.add('spinner-sector-blue');
+
+      const spinnerSectorGreen = document.createElement('div');
+      spinnerSectorGreen.classList.add('spinner-sector');
+      spinnerSectorGreen.classList.add('spinner-sector-green');
+
+      spinner.appendChild(spinnerText);
+      spinner.appendChild(spinnerSectorRed);
+      spinner.appendChild(spinnerSectorBlue);
+      spinner.appendChild(spinnerSectorGreen);
+      bookingElement.appendChild(spinner);
    }
 };
 
@@ -236,6 +282,8 @@ let bookingControllers = {
    },
    // show and deal with Booking Data
    showBooking: function() {
+      bookingViews.createLoadingElement();
+
       bookingModels.fetchGetBookingAPI()
          .then(() => bookingViews.createDetermine())
          .then(() => {
@@ -257,6 +305,8 @@ let bookingControllers = {
    },
    // delete booking
    deleteBooking: function() {
+      bookingViews.createLoadingElement();
+      
       bookingModels.fetchDeleteBookingAPI()
          .then(() => this.deleteBookingDetermine())
          .then(() => bookingModels.deleteBookingState = null)

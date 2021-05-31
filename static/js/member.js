@@ -43,9 +43,10 @@ let memberViews = {
       const orderDataArray = memberModels.orderDataArray;
 
       const ordersListElement = document.querySelector('.orders-list');
+      const spinner = document.getElementsByClassName('spinner')[0];
 
-      this.removeAllChildNodes(ordersListElement);
-   
+      ordersListElement.removeChild(spinner);
+
       if (orderDataArray == null) {  
          const noResultElement = document.createElement('div');
          noResultElement.classList.add('no-result');
@@ -91,6 +92,34 @@ let memberViews = {
       orderAElement.appendChild(paymentElment);
       
       orderAElement.href = `/thankyou?number=${orderNumber}`;
+   },
+   createLoadingElement: function() {
+      const ordersListElement = document.getElementsByClassName('orders-list')[0];
+
+      const spinner = document.createElement('div');
+      spinner.classList.add('spinner');
+
+      const spinnerText = document.createElement('div');
+      spinnerText.classList.add('spinner-text');
+      spinnerText.innerText = 'Loading';
+
+      const spinnerSectorRed = document.createElement('div');
+      spinnerSectorRed.classList.add('spinner-sector');
+      spinnerSectorRed.classList.add('spinner-sector-red');
+
+      const spinnerSectorBlue = document.createElement('div');
+      spinnerSectorBlue.classList.add('spinner-sector');
+      spinnerSectorBlue.classList.add('spinner-sector-blue');
+
+      const spinnerSectorGreen = document.createElement('div');
+      spinnerSectorGreen.classList.add('spinner-sector');
+      spinnerSectorGreen.classList.add('spinner-sector-green');
+
+      spinner.appendChild(spinnerText);
+      spinner.appendChild(spinnerSectorRed);
+      spinner.appendChild(spinnerSectorBlue);
+      spinner.appendChild(spinnerSectorGreen);
+      ordersListElement.appendChild(spinner);
    }
 };
 
@@ -100,6 +129,8 @@ let memberControllers = {
       this.showOrders();
    },
    showUserData: function() {
+      memberViews.createLoadingElement();
+
       memberModels.fetchGetUserAPI()
          .then(() => memberModels.userData = null)
          .catch(error => console.log(error));

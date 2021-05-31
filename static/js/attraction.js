@@ -148,15 +148,15 @@ let attractionViews = {
       }
    },
    createAPIElement: function(attractionData) {
-      let images = attractionData.images;
-      let name = attractionData.name;
+      const images = attractionData.images;
+      const name = attractionData.name;
       let mrt = attractionData.mrt;
       if (!mrt) {
          mrt = '無';
       }
-      let category = attractionData.category;
-      let description = attractionData.description;
-      let address = attractionData.address;
+      const category = attractionData.category;
+      const description = attractionData.description;
+      const address = attractionData.address;
       let transport = attractionData.transport;
       if (!transport) {
          transport = '無';
@@ -172,6 +172,16 @@ let attractionViews = {
       for (let image of images) {
          let imageElement = document.createElement('img');
          imageElement.src = image;
+
+         const loadingElement = document.createElement('div');
+         loadingElement.innerText = 'Loading...';
+         loadingElement.classList.add('loading');
+   
+         attractionImageElement.appendChild(loadingElement);
+
+         imageElement.onload = function() {
+            attractionImageElement.removeChild(loadingElement);
+         }
    
          let circleElement = document.createElement('div');
          circleElement.classList.add('circle');
@@ -180,19 +190,19 @@ let attractionViews = {
          circleAreaElement.append(circleElement);
       }
    
-      let nameContent = document.createTextNode(name);
+      const nameContent = document.createTextNode(name);
       nameElement.appendChild(nameContent);
    
-      let categoryMrtContent = document.createTextNode(`${category} at ${mrt}`);
+      const categoryMrtContent = document.createTextNode(`${category} at ${mrt}`);
       categoryMrtElement.appendChild(categoryMrtContent);
    
-      let descriptionContent = document.createTextNode(description);
+      const descriptionContent = document.createTextNode(description);
       descriptionElement.appendChild(descriptionContent);
    
-      let addressContent = document.createTextNode(address);
+      const addressContent = document.createTextNode(address);
       addressElement.appendChild(addressContent);
    
-      let transportContent = document.createTextNode(transport);
+      const transportContent = document.createTextNode(transport);
       transportElement.appendChild(transportContent);
    },
    // carousel

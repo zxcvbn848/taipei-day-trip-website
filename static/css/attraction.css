@@ -45,6 +45,21 @@
    transition: 500ms ease-in-out;
 }
 
+.attraction-introduction .carousel .attraction-image .loading {
+   font-family: Noto Sans TC;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 20px;
+   line-height: 20px;
+
+   color: #666666;
+
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+
 .attraction-introduction .carousel .attraction-image img.active {
    opacity: 1;
 }

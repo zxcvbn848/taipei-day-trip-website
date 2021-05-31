@@ -12,7 +12,7 @@ let indexModels = {
       if (page != null) return `/api/attractions?page=${page}`;
       return null;
    },
-   fetchAPI: function(src) {
+   fetchGetAttrsAPI: function(src) {
       return fetch(src)
          .then(response => response.json())
          .then(result => {
@@ -38,11 +38,14 @@ let indexViews = {
    createDetermine: function() {
       const dataArray = indexModels.attractionsDataArray;
       const mainElement = document.getElementsByClassName('main')[0];
+      const spinner = document.getElementsByClassName('spinner')[0];
+
+      mainElement.removeChild(spinner);
 
       if (dataArray == null) {
-         const titleElement = this.createNoResultElement();
+         const noResultElement = this.createNoResultElement();
    
-         mainElement.appendChild(titleElement);
+         mainElement.appendChild(noResultElement);
       } else {
          for (let data of dataArray) {
             let attractionElement = document.createElement('a');
@@ -54,60 +57,98 @@ let indexViews = {
       } 
    },
    createAPIElement: function(data, attractionElement) {
-      let image = data.images[0];
-      let title = data.name;
+      const image = data.images[0];
+      const title = data.name;
       
       let mrt = data.mrt;
       if (mrt == null) mrt = '無';
 
-      let category = data.category;
-      let id = data.id;
+      const category = data.category;
+      const id = data.id;
    
       attractionElement.href = `/attraction/${id}`;
    
-      let attractionImage = document.createElement('div');
+      const attractionImage = document.createElement('div');
       attractionImage.classList.add('attraction-image');
-      let imgElement = document.createElement('img');
+      const imgElement = document.createElement('img');
       imgElement.src = image;
-   
+      const loadingElement = document.createElement('div');
+      loadingElement.innerText = 'Loading...';
+      loadingElement.classList.add('loading');
+
       attractionImage.appendChild(imgElement);
+      attractionImage.appendChild(loadingElement);
       attractionElement.appendChild(attractionImage);
+
+      imgElement.onload = function() {
+         attractionImage.removeChild(loadingElement);
+      };
    
-      let titleElement = document.createElement('div');
+      const titleElement = document.createElement('div');
       titleElement.classList.add('title');
-      let titleContent = document.createTextNode(title);
+      const titleContent = document.createTextNode(title);
    
       titleElement.appendChild(titleContent);
       attractionElement.appendChild(titleElement);            
    
-      let mrtElement = document.createElement('div');
+      const mrtElement = document.createElement('div');
       mrtElement.classList.add('mrt');
-      let mrtContent = document.createTextNode(mrt);
+      const mrtContent = document.createTextNode(mrt);
    
       mrtElement.appendChild(mrtContent);
       attractionElement.appendChild(mrtElement);            
    
-      let categoryElement = document.createElement('div');
+      const categoryElement = document.createElement('div');
       categoryElement.classList.add('category');
-      let categoryContent = document.createTextNode(category);
+      const categoryContent = document.createTextNode(category);
    
       categoryElement.appendChild(categoryContent);
       attractionElement.appendChild(categoryElement);    
    },
    createNoResultElement: function() {
-      let titleElement = document.createElement('div');
-      titleElement.classList.add('no-result');
+      const noResultElement = document.createElement('div');
+      noResultElement.classList.add('no-result');
       const noResultConetent = document.createTextNode('沒有結果');
    
-      titleElement.appendChild(noResultConetent);
+      noResultElement.appendChild(noResultConetent);
    
-      return titleElement;
+      return noResultElement;
+   },
+   createLoadingElement: function() {
+      const mainElement = document.getElementsByClassName('main')[0];
+
+      const spinner = document.createElement('div');
+      spinner.classList.add('spinner');
+
+      const spinnerText = document.createElement('div');
+      spinnerText.classList.add('spinner-text');
+      spinnerText.innerText = 'Loading';
+
+      const spinnerSectorRed = document.createElement('div');
+      spinnerSectorRed.classList.add('spinner-sector');
+      spinnerSectorRed.classList.add('spinner-sector-red');
+
+      const spinnerSectorBlue = document.createElement('div');
+      spinnerSectorBlue.classList.add('spinner-sector');
+      spinnerSectorBlue.classList.add('spinner-sector-blue');
+
+      const spinnerSectorGreen = document.createElement('div');
+      spinnerSectorGreen.classList.add('spinner-sector');
+      spinnerSectorGreen.classList.add('spinner-sector-green');
+
+      spinner.appendChild(spinnerText);
+      spinner.appendChild(spinnerSectorRed);
+      spinner.appendChild(spinnerSectorBlue);
+      spinner.appendChild(spinnerSectorGreen);
+      mainElement.appendChild(spinner);
    }
 };
 
 // indexControllers
 let indexControllers = {
    search: function() {
+      indexViews.createLoadingElement();
+
       isFetching = true;
    
       let keyword = document.getElementsByName('keyword')[0].value;
@@ -115,7 +156,7 @@ let indexControllers = {
       const src = indexModels.srcDetermine(page, keyword);
       if (!src) return;
    
-      indexModels.fetchAPI(src)
+      indexModels.fetchGetAttrsAPI(src)
          .then(() => indexViews.createDetermine())
          .then(() => indexModels.attractionsDataArray = null)
          .catch(error => console.log(error));
