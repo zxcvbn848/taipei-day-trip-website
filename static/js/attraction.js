@@ -288,7 +288,7 @@ let attractionViews = {
 let attractionControllers = {
    init: function() {
       this.showAttraction();
-      this.minToday();
+      this.minDate();
    },
    // show attraction-related informantion
    showAttraction: function() {
@@ -326,11 +326,11 @@ let attractionControllers = {
          .catch(error => console.log(error));
    },
    /* input date: min today */
-   minToday: function() {
-      let totay = new Date();
-      let dd = totay.getDate();
-      let mm = totay.getMonth() + 1;
-      const yyyy = totay.getFullYear();
+   minDate: function() {
+      let date = new Date();
+      let dd = date.getDate();
+      let mm = date.getMonth() + 1;
+      let yyyy = date.getFullYear();
    
       if (dd < 10) {
          dd = `0${dd}`;
@@ -339,8 +339,8 @@ let attractionControllers = {
          mm = `0${mm}`;
       }
    
-      today = `${yyyy}-${mm}-${dd}`;
-      document.getElementById('date').setAttribute('min', today);
+      date = `${yyyy}-${mm}-${dd}`;
+      document.getElementById('date').setAttribute('min', date);
    }
 };
 
