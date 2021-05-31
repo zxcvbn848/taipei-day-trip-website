@@ -40,7 +40,7 @@
          <label for="name">聯絡姓名：</label>
          <input type="text" name="name" id="name" placeholder="請輸入姓名" required>
          <label for="email">連絡信箱：</label>
-         <input type="email" name="email" id="email" placeholder="請輸入信箱" required>
+         <input type="email" name="email" id="email" placeholder="請輸入信箱" pattern="^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]{2,6}$" required>
          <label for="phone-number">手機號碼：</label>
          <input type="tel" name="phone-number" id="phone-number" placeholder="09XX-XXX-XXX" pattern="09\d{2}-\d{3}-\d{3}" required>
       </div>

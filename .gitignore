@@ -139,7 +139,7 @@ cython_debug/
 
 # Andy's gitignore
 *.txt
-test.py
+test.*
 panigation.*
 *-cookie.js
 booking(old).html

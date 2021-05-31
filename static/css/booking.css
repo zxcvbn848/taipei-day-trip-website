@@ -270,8 +270,9 @@
    color: #FFFFFF;
 }
 
-.booking .final-check .submit-button:hover {
+.booking .final-check .submit-button:enabled:hover {
    background-color: rgb(0, 68, 255);
+   cursor: pointer;
 }
 
 .booking .final-check .submit-button:disabled {

@@ -56,6 +56,8 @@ let attractionModels = {
    fetchPostBookingAPI: function() {
       const id = document.getElementById('idInput').value;
       const date = document.getElementById('date').value;
+      if (!this.dateConfirm(date)) return;
+
       const time = document.querySelector('input[name=halfDay]:checked').value;
       const price = document.getElementById('priceInput').value;
 
@@ -75,6 +77,15 @@ let attractionModels = {
          })
          .then(response => response.json())
          .then(result => this.bookingState = result);
+   },
+   dateConfirm: function(dateValue) {
+      dateArray = dateValue.split('-').map(date => parseInt(date));
+
+      const today = new Date();
+      const dateSelected = new Date(dateArray[0], dateArray[1], dateArray[2]);
+
+      if (dateSelected < today) return false;
+      return true;
    }
 };
 
@@ -257,6 +268,7 @@ let attractionViews = {
          parent.location.href = '/booking';
       }
       if (bookingFalied) {
+         alert(attractionModels.bookingState.message);
          return;
       }
    }

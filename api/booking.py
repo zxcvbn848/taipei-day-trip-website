@@ -50,7 +50,15 @@ def postBooking():
 
          if not (attractionId and date and time and price and userId):
             return jsonify({ "error": True, "message": "建立失敗，輸入不正確或其他原因" })
-         
+
+         today = datetime.now()
+         dateList = date.split("-")
+         dateList = list(map(int, dateList))
+         dateSelected = datetime(dateList[0], dateList[1], dateList[2])
+
+         if (dateSelected < today):
+            return jsonify({ "error": True, "message": "建立失敗，日期不得小於今天" })
+
          originBooking = selectBooking(userId = userId)
 
          if originBooking:

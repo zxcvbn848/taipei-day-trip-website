@@ -17,6 +17,25 @@ let signinUpModels = {
    signinState: null,
    signupState: null,
    signoutState: null,
+   // Data Authentication
+   dataAuth: function(element) {
+      const emailPattern = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]{2,6}$/;
+      const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/;
+      
+      if (element.nameElement) {
+         if (element.passwordElement.value.length < 4 ?? element.emailElement.value.length === 0 ?? element.nameElement.value.length === 0) {
+            return false;
+         }   
+      }
+
+      if (element.passwordElement.value.length < 4 ?? element.emailElement.value.length === 0) {
+         return false;
+      }
+
+      const patternBoolean = emailPattern.test(element.emailElement.value) && passwordPattern.test(element.passwordElement.value);
+      
+      return patternBoolean;
+   },   
    fetchPatchUserAPI: function() {
       const emailElememt = document.getElementById('signinEmail');
       const passwordElement = document.getElementById('signinPassword');
@@ -174,14 +193,24 @@ let signinUpViews = {
 let signinUpControllers = {
    // Signup Authentication
    signupCheck: function() {
+      /* hash, TBD */
+
+      const nameElement = document.getElementById('signupName');
+      const emailElement = document.getElementById('signupEmail');
       const passwordElement = document.getElementById('signupPassword');
 
-      /* 資料驗證，待進行 */
-      if (passwordElement.value.length < 4) {
+      const signupElements = {
+         nameElement,
+         emailElement,
+         passwordElement
+      }
+      
+      const dataAuth = signinUpModels.dataAuth(signupElements);
+      if (!dataAuth) {
+         alert('資料格式錯誤');
          return;
       }
-      /* 加密，待進行 */
-      
+
       signinUpModels.fetchPostUserAPI()
          .then(() => {
             signinUpViews.signupSuccessDetermine();
@@ -193,15 +222,22 @@ let signinUpControllers = {
    },
    // Signin Authentication
    signinCheck: function() {
+      /* hash, TBD */
+
+      const emailElement = document.getElementById('signinEmail');
       const passwordElement = document.getElementById('signinPassword');
 
-      /* 資料驗證，待進行 */
-      if (passwordElement.value.length < 4) {
+      const signinElements = {
+         emailElement,
+         passwordElement
+      }
+
+      const dataAuth = signinUpModels.dataAuth(signinElements);
+      if (!dataAuth) {
+         alert('資料格式錯誤');
          return;
       }
-   
-      /* 加密，待進行 */
-      
+
       signinUpModels.fetchPatchUserAPI()
          .then(() => {
             signinUpViews.signinSuccessDetermine();

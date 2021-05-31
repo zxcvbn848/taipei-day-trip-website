@@ -14,6 +14,18 @@ let bookingModels = {
    bookingData: null,
    deleteBookingState: null,
    orderData: null,
+   dataAuth: function(element) {
+      const emailPattern = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]{2,6}$/;
+      const phonePattern = /09\d{2}-\d{3}-\d{3}/;
+      
+      if (element.emailInput.value.length === 0 ?? element.phoneNumberInput.value.length === 0) {
+         return false;
+      }
+
+      const patternBoolean = emailPattern.test(element.emailInput.value) && phonePattern.test(element.phoneNumberInput.value);
+      
+      return patternBoolean;
+   },
    // get userData
    fetchGetUserAPI: function() {
       const src = '/api/user';
@@ -73,6 +85,13 @@ let bookingModels = {
       const nameInput = document.getElementById('name');
       const emailInput = document.getElementById('email');
       const phoneNumberInput = document.getElementById('phone-number');
+
+      const orderElements = {
+         emailInput,
+         phoneNumberInput
+      }
+
+      this.dataAuth(orderElements);
    
       const src = '/api/orders';
       return fetch(src, {

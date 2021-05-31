@@ -46,10 +46,7 @@ let memberViews = {
 
       this.removeAllChildNodes(ordersListElement);
    
-      if (orderDataArray == null) {
-         const welcomeElement = document.getElementsByClassName('welcome')[0];
-         welcomeElement.innerText = `${username}，您好：`
-   
+      if (orderDataArray == null) {  
          const noResultElement = document.createElement('div');
          noResultElement.classList.add('no-result');
          const noResultContent = document.createTextNode('您尚未有任何行程');
