@@ -270,8 +270,10 @@ let bookingViews = {
 // bookingControllers
 /* Remember to change variables to null !!! */
 let bookingControllers = {
-   init: function() {
-      this.showUserData();
+   init: async function() {
+      bookingViews.createLoadingElement();
+      
+      await this.showUserData();
       this.showBooking();
    },
    // show and deal with User Data
@@ -282,8 +284,6 @@ let bookingControllers = {
    },
    // show and deal with Booking Data
    showBooking: function() {
-      bookingViews.createLoadingElement();
-
       bookingModels.fetchGetBookingAPI()
          .then(() => bookingViews.createDetermine())
          .then(() => {

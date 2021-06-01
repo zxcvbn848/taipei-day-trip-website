@@ -125,12 +125,12 @@ let memberViews = {
 
 let memberControllers = {
    init: async function() {
+      memberViews.createLoadingElement();
+
       await this.showUserData();
       this.showOrders();
    },
    showUserData: function() {
-      memberViews.createLoadingElement();
-
       memberModels.fetchGetUserAPI()
          .then(() => memberModels.userData = null)
          .catch(error => console.log(error));
