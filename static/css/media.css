@@ -396,6 +396,8 @@
       grid-template-rows: 1fr;
 
       width: 90%;
+
+      min-height: 43.2vh;
    }
 
    .main .spinner {
