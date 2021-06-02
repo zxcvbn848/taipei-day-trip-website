@@ -17,6 +17,7 @@
 
    width: var(--content-width);
    max-width: 90%;
+   min-height: 16px;
 
    color: #666666;
 }

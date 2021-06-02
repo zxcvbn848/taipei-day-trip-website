@@ -45,6 +45,21 @@
    transition: 500ms ease-in-out;
 }
 
+.attraction-introduction .carousel .attraction-image .loading {
+   font-family: Noto Sans TC;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 20px;
+   line-height: 20px;
+
+   color: #666666;
+
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+
 .attraction-introduction .carousel .attraction-image img.active {
    opacity: 1;
 }
@@ -69,6 +84,7 @@
 .attraction-introduction .carousel #left-arrow:hover,
 .attraction-introduction .carousel #right-arrow:hover {
    opacity: 1;
+   cursor: pointer;
 }
 
 .attraction-introduction .carousel .circle-area {
@@ -196,6 +212,7 @@
 
 .attraction-introduction .information .schedule-order .date input:hover {
    border: 2px ridge blue;
+   cursor: pointer;
 }
 
 .attraction-introduction .information .schedule-order .time {
@@ -216,6 +233,11 @@
    transition: 0.2s all linear;
    outline: none;
    margin-right: 5px;
+}
+
+.attraction-introduction .information .schedule-order .time input:hover,
+.attraction-introduction .information .schedule-order .time label:hover {
+   cursor: pointer;
 }
 
 .attraction-introduction .information .schedule-order .time input:checked {
@@ -251,6 +273,7 @@
 
 .attraction-introduction .information .schedule-order button:hover {
    background-color: rgb(0, 68, 255);
+   cursor: pointer;
 }
 
 /* hr */
@@ -271,6 +294,7 @@ section {
    
    width: var(--content-width);
    max-width: 90%;
+   min-height: 22.8vh;
 
    margin: 50px auto 55px;
 

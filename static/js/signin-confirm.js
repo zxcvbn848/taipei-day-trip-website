@@ -53,7 +53,7 @@ let signinConfirmViews = {
       }
    },
    openModal: function(modal) {
-      if (modal == null) return
+      if (modal == null) return;
       modal.classList.add('active');
       overlay.classList.add('active');
    }
@@ -64,20 +64,14 @@ let signinConfirmControllers = {
    // Signin check for navbar display
    signinConfirm: function() {
       signinConfirmModels.signinFetchAPI()
-         .then(() => {
-            signinConfirmViews.signinDetermine();
-         })
-         .then(() => {
-            signinConfirmModels.userData = null;
-         })
+         .then(() => signinConfirmViews.signinDetermine())
+         .then(() => signinConfirmModels.userData = null)
          .catch(error => console.log(error));
    },
    // Signin check fo going /booking
    signinPopup: function() {
       signinConfirmModels.signinFetchAPI()
-         .then(() => {
-            signinConfirmViews.goBookingDetermine();
-         })
+         .then(() => signinConfirmViews.goBookingDetermine())
          .catch(error => console.log(error));
    }
 };

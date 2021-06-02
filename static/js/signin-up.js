@@ -16,6 +16,26 @@ const overlay = document.getElementById('overlay');
 let signinUpModels = {
    signinState: null,
    signupState: null,
+   signoutState: null,
+   // Data Authentication
+   dataAuth: function(element) {
+      const emailPattern = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]{2,6}$/;
+      const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/;
+      
+      if (element.nameElement) {
+         if (element.passwordElement.value.length < 4 ?? element.emailElement.value.length === 0 ?? element.nameElement.value.length === 0) {
+            return false;
+         }   
+      }
+
+      if (element.passwordElement.value.length < 4 ?? element.emailElement.value.length === 0) {
+         return false;
+      }
+
+      const patternBoolean = emailPattern.test(element.emailElement.value) && passwordPattern.test(element.passwordElement.value);
+      
+      return patternBoolean;
+   },   
    fetchPatchUserAPI: function() {
       const emailElememt = document.getElementById('signinEmail');
       const passwordElement = document.getElementById('signinPassword');
@@ -32,9 +52,7 @@ let signinUpModels = {
             })
          })
          .then(response => response.json())
-         .then(result => {
-            this.signinState = result;
-         });
+         .then(result => this.signinState = result);
    },
    fetchPostUserAPI: function() {
       const nameElement = document.getElementById('signupName');
@@ -54,9 +72,16 @@ let signinUpModels = {
             })
          })
          .then(response => response.json())
-         .then(result => {
-            this.signupState = result;
-         });
+         .then(result => this.signupState = result);
+   },
+   // Signout
+   fetchDeleteUserAPI: function() {
+      const src = '/api/user';
+      return fetch(src, {
+            method: 'DELETE'
+         })
+         .then(response => response.json())
+         .then(result => this.signoutState = result);
    }
 };
 
@@ -67,12 +92,12 @@ let signinUpViews = {
       overlayForNavbar.classList.toggle('active');
    },
    openModal: function(modal) {
-      if (modal == null) return
+      if (modal == null) return;
       modal.classList.add('active');
       overlay.classList.add('active');
    },
    closeModal: function(modal) {
-      if (modal == null) return
+      if (modal == null) return;
       modal.classList.remove('active');
       overlay.classList.remove('active');
    },
@@ -153,6 +178,14 @@ let signinUpViews = {
          passwordElement.value = '';
          passwordElement.innerText = '';
       }
+   },
+   // Signout 
+   signoutSuccessDetermine: function() {
+      const signoutSuccess = signinUpModels.signoutState['ok'];
+      const signoutFailed = signinUpModels.signoutState['error'];
+
+      if (signoutSuccess) location.reload();
+      if (signoutFailed) alert(result['message']);
    }
 };
 
@@ -160,14 +193,24 @@ let signinUpViews = {
 let signinUpControllers = {
    // Signup Authentication
    signupCheck: function() {
+      /* hash, TBD */
+
+      const nameElement = document.getElementById('signupName');
+      const emailElement = document.getElementById('signupEmail');
       const passwordElement = document.getElementById('signupPassword');
 
-      /* 資料驗證，待進行 */
-      if (passwordElement.value.length < 4) {
+      const signupElements = {
+         nameElement,
+         emailElement,
+         passwordElement
+      }
+      
+      const dataAuth = signinUpModels.dataAuth(signupElements);
+      if (!dataAuth) {
+         alert('資料格式錯誤');
          return;
       }
-      /* 加密，待進行 */
-      
+
       signinUpModels.fetchPostUserAPI()
          .then(() => {
             signinUpViews.signupSuccessDetermine();
@@ -179,15 +222,22 @@ let signinUpControllers = {
    },
    // Signin Authentication
    signinCheck: function() {
+      /* hash, TBD */
+
+      const emailElement = document.getElementById('signinEmail');
       const passwordElement = document.getElementById('signinPassword');
 
-      /* 資料驗證，待進行 */
-      if (passwordElement.value.length < 4) {
+      const signinElements = {
+         emailElement,
+         passwordElement
+      }
+
+      const dataAuth = signinUpModels.dataAuth(signinElements);
+      if (!dataAuth) {
+         alert('資料格式錯誤');
          return;
       }
-   
-      /* 加密，待進行 */
-      
+
       signinUpModels.fetchPatchUserAPI()
          .then(() => {
             signinUpViews.signinSuccessDetermine();
@@ -196,6 +246,22 @@ let signinUpControllers = {
             signinUpModels.signinState = null;
          })
          .catch(error => console.log(error));
+   },
+   // Signout
+   signoutCheck: function() {
+      const yes = confirm('確定要登出嗎？');
+      
+      if (yes) {
+         signinUpControllers.signout();
+      } else {
+         return;
+      }
+   },
+   signout: function() {
+      signinUpModels.fetchDeleteUserAPI()
+      .then(() => signinUpViews.signoutSuccessDetermine())
+      .then(() => signinUpModels.signoutState = null)
+      .catch(error => console.log(error));
    }
 };
 
@@ -206,9 +272,7 @@ toggleButton.addEventListener('click', e => {
    signinUpViews.toggleNavbarList();
 });
 
-overlayForNavbar.addEventListener('click', () => {
-   signinUpViews.toggleNavbarList();
-});
+overlayForNavbar.addEventListener('click', () => signinUpViews.toggleNavbarList());
 
 // Popup Modal
 openModalButtons.forEach(button => {
@@ -232,9 +296,7 @@ closeModalButtons.forEach(button => {
 
 overlay.addEventListener('click', () => {
    const modals = document.querySelectorAll('.modal.active');
-   modals.forEach(modal => {
-      signinUpViews.closeModal(modal);
-   });
+   modals.forEach(modal => signinUpViews.closeModal(modal));
 });
 
 goSignupButton.addEventListener('click', () => {
@@ -269,44 +331,6 @@ signinForm.addEventListener('submit', e => {
    signinUpControllers.signinCheck();
 });
 
-// TBD
 /* signout */
-function signout() {
-   const yes = confirm('確定要登出嗎？');
 
-   signoutDetermine(yes);
-}
-
-function signoutDetermine(yes) {
-   if (yes) {
-      const src = '/api/user';
-      fetchDeleteUserAPI(src);
-   } else {
-      return;
-   }
-}
-
-function fetchDeleteUserAPI(src) {
-   fetch(src, {
-      method: 'DELETE'
-   })
-      .then(response => response.json())
-      .then(result => {
-         const signoutSuccess = result['ok'];
-         const signoutFailed = result['error'];
-         
-         signoutSuccessDetermine(signoutSuccess, signoutFailed, result);
-      })
-      .catch(err => console.log('錯誤', err));   
-}
-
-function signoutSuccessDetermine(signoutSuccess, signoutFailed, result) {
-   if (signoutSuccess) {
-      location.reload(); 
-   }
-   if (signoutFailed) {
-      alert(result['message']);
-   }
-}
-
-signoutButton.addEventListener('click', signout);
+signoutButton.addEventListener('click', signinUpControllers.signoutCheck);

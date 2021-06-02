@@ -4,6 +4,7 @@ sys.path.append("..")
 from flask import request, Blueprint, jsonify, session
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
+import re
 import os
 import json
 import requests
@@ -49,12 +50,18 @@ def postOrders():
          if not (tripBoolean and attractionBoolean and contactBoolean and userId):
             return jsonify({ "error": True, "message": "訂單建立失敗，輸入不正確或其他原因" })
          
+         emailRegExp = os.getenv("EMAIL_PATTERN")
+         phoneRegExp = os.getenv("PHONE_PATTERN")
+
+         if not (re.match(phoneRegExp, contactPhone) and re.match(emailRegExp, contactEmail)):
+            return jsonify({ "error": True, "message": "訂單建立失敗，手機或信箱格式錯誤" })
+
          if userId in range(1, 10):
             userIdInOrder = f"00{userId}"
          if userId in range(10, 100):
             userIdInOrder = f"0{userId}"
          tz = timezone(timedelta(hours = +8))
-         orderNumber = datetime.strftime(datetime.now(tz), "%Y%m%d%H%M%S") + f"-{userIdInOrder}"
+         orderNumber = f"{userIdInOrder}-" + datetime.strftime(datetime.now(tz), "%Y%m%d%H%M%S")
          
          insertOrder(attractionId = attractionId, userId = userId, phone = contactPhone, number = orderNumber, price = price, date = date, time = time, status = 1)
 

@@ -2,12 +2,20 @@ import sys
 sys.path.append("..")
 
 from flask import request, Blueprint, jsonify, session
-from datetime import datetime
+from datetime import datetime, date
 import json
 
 from mysql_connect import selectBooking, insertBooking, updateBooking, deleteBookingData
  
-api_booking = Blueprint("api_booking", __name__) 
+api_booking = Blueprint("api_booking", __name__)
+
+def minDate(bookingDate):
+   today = date.today()
+   dateList = bookingDate.split("-")
+   dateList = list(map(int, dateList))
+   dateSelected = date(dateList[0], dateList[1], dateList[2])
+
+   return dateSelected < today
 
 @api_booking.route("/booking", methods=["GET"])
 def getBooking():
@@ -50,7 +58,10 @@ def postBooking():
 
          if not (attractionId and date and time and price and userId):
             return jsonify({ "error": True, "message": "建立失敗，輸入不正確或其他原因" })
-         
+
+         if (minDate(date)):
+            return jsonify({ "error": True, "message": "建立失敗，日期不得小於今天" })
+
          originBooking = selectBooking(userId = userId)
 
          if originBooking:

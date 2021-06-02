@@ -42,6 +42,8 @@
 
 .main .attraction .attraction-image {
    grid-column: span 2;
+
+   position: relative;
 }
 
 .main .attraction .attraction-image img {   
@@ -50,6 +52,21 @@
    height: 100%;
 
    border-radius: 5px 5px 0px 0px;
+}
+
+.main .attraction .attraction-image .loading {
+   font-family: Noto Sans TC;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 20px;
+   line-height: 20px;
+
+   color: #666666;
+
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
 }
 
 .main .attraction .title, 

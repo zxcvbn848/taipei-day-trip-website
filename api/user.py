@@ -2,8 +2,13 @@ import sys
 sys.path.append("..")
 
 from flask import request, Blueprint, jsonify, session
+from dotenv import load_dotenv
+import os
+import re
 
 from mysql_connect import selectUser, insertUser
+
+load_dotenv()
 
 api_user = Blueprint("api_user", __name__)
 
@@ -26,8 +31,14 @@ def postUser():
       email = request.get_json()["email"]
       password = request.get_json()["password"]
 
+      emailRegExp = os.getenv("EMAIL_PATTERN")
+      passwordRegExp = os.getenv("PASSWORD_PATTERN")
+
       if not (name and email and password):
          return jsonify({ "error": True, "message": "註冊失敗，姓名、帳號和密碼皆不得為空" })
+      
+      if not (re.match(passwordRegExp, password) and re.match(emailRegExp, email)):
+         return jsonify({ "error": True, "message": "註冊失敗，信箱或密碼格式錯誤" })
 
       userVerified = selectUser(email = email)
       if userVerified:
@@ -51,6 +62,13 @@ def patchUser():
 
       if not (email and password):
          return jsonify({ "error": True, "message": "登入失敗，帳號、密碼皆不得為空" })
+
+      emailRegExp = os.getenv("EMAIL_PATTERN")
+      passwordRegExp = os.getenv("PASSWORD_PATTERN")
+
+      if not (re.match(passwordRegExp, password) and re.match(emailRegExp, email)):
+         return jsonify({ "error": True, "message": "登入失敗，信箱或密碼格式錯誤" })
+   
 
       user = selectUser(email = email, password = password)
 
