@@ -16,7 +16,7 @@
 
 **Database**: MySQL, Normalization, Connection Pool 
 
-**Version Control**: Git, Github
+**Version Control**: Git, GitHub
 
 **AWS**: EC2 (AMI2)
 
